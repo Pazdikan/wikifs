@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <title><%= fileName || "New file" %></title>
+    <%- include("head.ejs") %>
+  </head>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("save_to_file").addEventListener("click", () => {
+        var infoboxFields = {};
+        var infoboxInputs = document.querySelectorAll(".infobox-input");
+        infoboxInputs.forEach(function (input) {
+          var infoboxKey = input.getAttribute("infobox-key");
+          if (input.value !== "") {
+            infoboxFields[infoboxKey] = input.value;
+          }
+        });
+
+        <% if (fileName) { %>
+          let fileName = "<%= fileName %>";
+        <% } else {%>
+          let fileName = window.prompt("Enter a file name", "");
+        <% } %>
+
+        fetch(`/wiki/${fileName}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fileName: fileName,
+            meta: {
+              title: document.getElementById("heading_title_input").value,
+              subtitle: document.getElementById("subtitle_input").value,
+            },
+            infobox: infoboxFields,
+            content: {
+              summary: document.getElementById("short_description_input").value,
+              full: document.getElementById("content_input").value,
+            },
+          }),
+        }).then(function (response) {
+          if (response.ok) {
+            window.location.href = `/wiki/${fileName}`;
+          } else {
+            throw new Error("Error: " + response.status);
+          }
+        });
+      });
+    });
+  </script>
+  <body>
+    <%- include("header.ejs", {settings}) %>
+    <div class="container">
+      <div class="row">
+        <div class="col order-md-first">
+          <h1 class="heading">
+            <input type="text" value="<%- file["meta"]["title"] %>"
+            id="heading_title_input">
+          </h1>
+          <textarea
+            name="Short description"
+            id="short_description_input"
+            cols="30"
+            rows="10"
+          >
+<%- file["content"]["summary"] %></textarea
+          >
+          <textarea name="Content" id="content_input" cols="30" rows="10">
+<%- file["content"]["full"] %></textarea
+          >
+
+          <p id="short_description"></p>
+
+          <div class="toc" id="toc"></div>
+          <div class="content swing-in-top-fwd-content" id="content"></div>
+        </div>
+        <div class="col col-auto">
+          <div class="">
+            <div class="infobox">
+              <div class="heading">
+                <h2 id="heading-title" class="tracking-in-expand">
+                  <%- file["meta"]["title"] %>
+                </h2>
+                <h1 class="infobox-subtitle slide-in-top">
+                  <input type="text" name="Subtitle" id="subtitle_input"
+                  value="<%- file["meta"]["subtitle"] %>" placeholder="Subtitle"
+                  >
+                </h1>
+              </div>
+              <% if ( Object.keys(infoboxImages).length > 0) { %>
+              <div class="infobox-gallery swing-in-top-fwd">
+                <div class="gallery-tabs">
+                  <% Object.keys(infoboxImages).forEach((key, index) => { %>
+                  <div class="gallery-tab <%= index === 0 ? 'active' : '' %>">
+                    <%= key %>
+                  </div>
+                  <% }); %>
+                </div>
+                <!-- prettier-ignore -->
+                <% Object.entries(infoboxImages).forEach(([key, value], index) => { %>
+                <img
+                  src="<%= value %>"
+                  class="infobox-img <%= index === 0 ? 'active' : '' %>"
+                  alt="<%= key %>"
+                />
+                <% }); %>
+              </div>
+              <% } %>
+
+              <!-- prettier-ignore -->
+              <% Object.entries(infoboxtemplate).forEach(([category, fields]) => { %>
+              <div class="infobox-group">
+                <div class="heading">
+                  <h3><%= category %></h3>
+                </div>
+                <div class="infobox-data">
+                  <% Object.entries(fields).forEach(([field, fieldName]) => { %>
+                  <div class="infobox-datarow">
+                    <p class="data-heading"><%- fieldName %></p>
+                    <ul class="data-content">
+                      <input type="text" value="<%- file.infobox[field] || ""
+                      %>" class="infobox-input" infobox-key="<%= field %>">
+                    </ul>
+                  </div>
+                  <% }) %>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+            <div>
+              <div class="infobox-button" id="save_to_file">Save</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script src="/scripts.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      let textareaContent = document.getElementById("content_input");
+      let textareaShort = document.getElementById("short_description_input");
+      let outputDivContent = document.getElementById("content");
+      let outputDivShort = document.getElementById("short_description");
+
+      outputDivContent.innerHTML = marked.parse(textareaContent.value);
+      outputDivShort.innerHTML = marked.parse(textareaShort.value);
+      generateToc();
+
+      textareaContent.addEventListener("input", function () {
+        outputDivContent.innerHTML = marked.parse(textareaContent.value);
+        generateToc();
+      });
+
+      textareaShort.addEventListener("input", function () {
+        outputDivShort.innerHTML = marked.parse(textareaShort.value);
+      });
+
+      document
+        .getElementById("heading_title_input")
+        .addEventListener("input", function () {
+          document.getElementById("heading-title").innerHTML = this.value;
+        });
+    });
+  </script>
+</html>

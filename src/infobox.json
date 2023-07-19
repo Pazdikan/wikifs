@@ -1,0 +1,80 @@
+{
+  "Biological Information": {
+    "full_name": "Full name",
+    "aliases": "Aliases",
+    "status": "Status",
+    "gender": "Gender",
+    "sexuality": "Sexuality",
+    "nationality": "Nationality",
+    "religion": "Religion",
+    "ethnicity": "Ethnicity",
+    "date_of_birth": "Date of Birth",
+    "place_of_birth": "Place of Birth",
+    "date_of_death": "Date of Death",
+    "place_of_death": "Place of Death"
+  },
+  "Biographical Information": {
+    "vehicles": "Vehicles"
+  },
+  "Vehicle Information": {
+    "vehicle_model": "Model",
+    "vehicle_year": "Year",
+    "vehicle_color": "Color",
+    "license_plate": "License Plate",
+    "vehicle_vin": "VIN",
+    "vehicle_owners": "Owners",
+    "vehicle_mileage": "Mileage",
+    "vehicle_fuel": "Fuel",
+    "vehicle_engine": "Engine",
+    "vehicle_transmission": "Transmission",
+    "vehicle_body": "Body",
+    "vehicle_doors": "Doors",
+    "vehicle_drivetrain": "Drivetrain",
+    "vehicle_gearbox": "Gearbox",
+    "drive": "Drive"
+  },
+  "Physical Information": {
+    "height": "Height",
+    "weight": "Weight",
+    "eye_color": "Eye color",
+    "hair_type": "Hair type",
+    "hair_color": "Hair color",
+    "skin_color": "Skin color",
+    "body_type": "Body type"
+  },
+  "Social": {
+    "email": "Email",
+    "phone_number": "Phone Number",
+    "website": "Website",
+    "bandcamp": "<i class='fa-brands fa-bandcamp'></i> Bandcamp",
+    "facebook": "<i class='fa-brands fa-facebook'></i> Facebook",
+    "github": "<i class='fa-brands fa-github'></i> GitHub",
+    "instagram": "<i class='fa-brands fa-instagram'></i> Instagram",
+    "linkedin": "<i class='fa-brands fa-linkedin'></i> LinkedIn",
+    "pinterest": "<i class='fa-brands fa-pinterest'></i> Pinterest",
+    "soundcloud": "<i class='fa-brands fa-soundcloud'></i> SoundCloud",
+    "spotify": "<i class='fa-brands fa-spotify'></i> Spotify",
+    "steam": " <i class='fa-brands fa-steam'></i> Steam",
+    "tumblr": "<i class='fa-brands fa-tumblr'></i> Tumblr",
+    "twitch": "<i class='fa-brands fa-twitch'></i> Twitch",
+    "twitter": "<i class='fa-brands fa-twitter'></i> Twitter",
+    "vimeo": "<i class='fa-brands fa-vimeo'></i> Vimeo",
+    "wattpad": "WattPad",
+    "youtube": "<i class='fa-brands fa-youtube'></i> YouTube"
+  },
+  "Family Information": {
+    "home": "Home",
+    "relationship": "Relationship",
+    "children": "Children",
+    "parents": "Parents",
+    "siblings": "Siblings"
+  },
+  "Work and Hobbies": {
+    "occupation": "Occupation",
+    "affiliation": "Affiliation",
+    "company": "Company",
+    "education": "Education",
+    "hobbies": "Hobbies",
+    "interests": "Interests"
+  }
+}
