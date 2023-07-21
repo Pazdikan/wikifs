@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
   const pages = {};
 
   found.forEach((file) => {
-    const fileName = file.split('\\').pop().split('.')[0];
+    const fileName = file.split(settings["dataPathSplitter"]).pop().split('.')[0];
     pages[fileName] = require(file);
   });
 
@@ -289,7 +289,7 @@ function findFile(fileName, arrayOfPaths) {
   let toReturn = '';
 
   arrayOfPaths.forEach((e) => {
-    const currentFileName = e.split('\\')[e.split('\\').length - 1];
+    const currentFileName = e.split(settings["dataPathSplitter"])[e.split(settings["dataPathSplitter"]).length - 1];
 
     if (
       currentFileName.toLowerCase().replace('.json', '')
