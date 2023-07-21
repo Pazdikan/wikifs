@@ -1,199 +1,197 @@
-const settings = require("./settings");
-const { marked } = require("marked");
-const express = require("express");
-const path = require("path");
-const fs = require("fs");
-const { gfmHeadingId } = require("marked-gfm-heading-id");
-const session = require("express-session");
-const { randomBytes } = require("crypto");
+const { marked } = require('marked');
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+const { gfmHeadingId } = require('marked-gfm-heading-id');
+const session = require('express-session');
+const { randomBytes } = require('crypto');
+const settings = require('./settings');
 
 const app = express();
 
 marked.use(gfmHeadingId());
 
-app.set("view engine", "pug");
-app.set("views", __dirname + "/views");
-app.use(express.static(__dirname + "/public"));
+app.set('view engine', 'pug');
+app.set('views', `${__dirname}/views`);
+app.use(express.static(`${__dirname}/public`));
 app.use(express.json());
 
 app.use(
   session({
-    secret: randomBytes(32).toString("hex"),
+    secret: randomBytes(32).toString('hex'),
     resave: false,
     saveUninitialized: true,
-  })
+  }),
 );
 
-app.use("/api/" + "auth", require("./auth/discord"));
+app.use('/api/' + 'auth', require('./auth/discord'));
 
 app.use((req, res, next) => {
-  if (!req.url.includes("api") && !req.session.user) {
+  if (!req.url.includes('api') && !req.session.user) {
     req.session.redirectTo = req.originalUrl;
-    return res.redirect("/api/auth/discord");
+    return res.redirect('/api/auth/discord');
   }
 
   next();
 });
 
-app.get("/", (req, res) => {
-  let found = scanForFiles(settings.dataPath, ".json");
-  let pages = {};
+app.get('/', (req, res) => {
+  const found = scanForFiles(settings.dataPath, '.json');
+  const pages = {};
 
   found.forEach((file) => {
-    const fileName = file.split("\\").pop().split(".")[0];
+    const fileName = file.split('\\').pop().split('.')[0];
     pages[fileName] = require(file);
   });
 
-  res.render("home", {
+  res.render('home', {
     settings,
     pages,
   });
 });
 
-app.get("/new", (req, res) => {
-  res.render("edit_wikipage", {
+app.get('/new', (req, res) => {
+  res.render('edit_wikipage', {
     settings,
-    fileName: "",
+    fileName: '',
     infoboxImages: {},
     file: {
       meta: {
-        title: "",
-        subtitle: "",
+        title: '',
+        subtitle: '',
       },
       infobox: {},
       content: {
-        summary: "",
-        full: "",
+        summary: '',
+        full: '',
       },
     },
-    infoboxtemplate: require(path.join(__dirname, "infobox.json")),
+    infoboxtemplate: require(path.join(__dirname, 'infobox.json')),
   });
 });
 
-app.post("/wiki/:file", (req, res) => {
+app.post('/wiki/:file', (req, res) => {
   let found = [];
-  let body = req.body;
-  let file = body.fileName;
+  const { body } = req;
+  const file = body.fileName;
 
-  found = scanForFiles(settings.dataPath, ".json");
+  found = scanForFiles(settings.dataPath, '.json');
 
-  let foundFile = findFile(file, found);
+  const foundFile = findFile(file, found);
 
-  if (foundFile === "") {
+  if (foundFile === '') {
     fs.writeFileSync(
-      path.join(settings.dataPath, file + ".json"),
-      JSON.stringify(body, null, 2)
+      path.join(settings.dataPath, `${file}.json`),
+      JSON.stringify(body, null, 2),
     );
     return res.status(200).json({
-      status: "OK",
+      status: 'OK',
     });
   }
 
   fs.writeFileSync(foundFile, JSON.stringify(body, null, 2));
 
   return res.status(200).json({
-    status: "OK",
+    status: 'OK',
   });
 });
 
-app.get("/wiki/:file/edit", (req, res) => {
-  const file = req.params.file;
+app.get('/wiki/:file/edit', (req, res) => {
+  const { file } = req.params;
   let found = [];
-  let foundImages = {};
-  let foundInfoboxImages = {};
+  const foundImages = {};
+  const foundInfoboxImages = {};
 
-  found = scanForFiles(settings.dataPath, ".json");
+  found = scanForFiles(settings.dataPath, '.json');
 
-  let foundFile = findFile(file, found);
+  const foundFile = findFile(file, found);
 
-  if (foundFile === "") {
-    res.render("404", {
+  if (foundFile === '') {
+    res.render('404', {
       fileName: file,
       settings,
     });
     return;
   }
 
-  let foundObject = require(foundFile);
+  const foundObject = require(foundFile);
 
   console.log(foundObject);
 
-  if (fs.existsSync(path.join(settings.dataPath, "images", file, "main")))
+  if (fs.existsSync(path.join(settings.dataPath, 'images', file, 'main'))) {
     scanForImages(
-      path.join(settings.dataPath, "images", file, "main"),
-      foundInfoboxImages
+      path.join(settings.dataPath, 'images', file, 'main'),
+      foundInfoboxImages,
     );
+  }
 
-  if (fs.existsSync(path.join(settings.dataPath, "images", file)))
-    scanForImages(path.join(settings.dataPath, "images", file), foundImages);
+  if (fs.existsSync(path.join(settings.dataPath, 'images', file))) { scanForImages(path.join(settings.dataPath, 'images', file), foundImages); }
 
-  res.render("edit_wikipage", {
+  res.render('edit_wikipage', {
     settings,
     file: foundObject,
     fileName: file,
     infoboxImages: foundInfoboxImages,
     images: foundImages,
 
-    infoboxtemplate: require(path.join(__dirname, "infobox.json")),
+    infoboxtemplate: require(path.join(__dirname, 'infobox.json')),
   });
 
   delete require.cache[require.resolve(foundFile)];
-  return;
 });
 
-app.get("/wiki/:file", (req, res) => {
-  const file = req.params.file;
+app.get('/wiki/:file', (req, res) => {
+  const { file } = req.params;
   let found = [];
-  let foundImages = {};
-  let foundInfoboxImages = {};
+  const foundImages = {};
+  const foundInfoboxImages = {};
 
-  found = scanForFiles(settings.dataPath, ".json");
+  found = scanForFiles(settings.dataPath, '.json');
 
-  let foundFile = findFile(file, found);
+  const foundFile = findFile(file, found);
 
-  if (foundFile === "") {
-    res.render("404", {
+  if (foundFile === '') {
+    res.render('404', {
       fileName: file,
       settings,
     });
     return;
   }
 
-  let foundObject = require(foundFile);
+  const foundObject = require(foundFile);
   convertToMarkdown(foundObject);
 
-  if (fs.existsSync(path.join(settings.dataPath, "images", file, "main")))
+  if (fs.existsSync(path.join(settings.dataPath, 'images', file, 'main'))) {
     scanForImages(
-      path.join(settings.dataPath, "images", file, "main"),
-      foundInfoboxImages
+      path.join(settings.dataPath, 'images', file, 'main'),
+      foundInfoboxImages,
     );
+  }
 
-  if (fs.existsSync(path.join(settings.dataPath, "images", file)))
-    scanForImages(path.join(settings.dataPath, "images", file), foundImages);
+  if (fs.existsSync(path.join(settings.dataPath, 'images', file))) { scanForImages(path.join(settings.dataPath, 'images', file), foundImages); }
 
-  res.render("wikipage", {
+  res.render('wikipage', {
     settings,
     file: foundObject,
     fileName: file,
     infoboxImages: foundInfoboxImages,
     images: foundImages,
 
-    infoboxtemplate: require(path.join(__dirname, "infobox.json")),
+    infoboxtemplate: require(path.join(__dirname, 'infobox.json')),
   });
 
   delete require.cache[require.resolve(foundFile)];
-  return;
 });
 
 // 404 for all other routes
-app.get("*", (req, res) => {
-  res.render("404", {
+app.get('*', (req, res) => {
+  res.render('404', {
     settings,
   });
 });
 
 app.listen(3000, () => {
-  console.log("Example app listening on " + settings.url());
+  console.log(`Example app listening on ${settings.url()}`);
 });
 /**
  * Scans a directory for files with a specific extension and adds their paths to a JSON array.
@@ -203,7 +201,7 @@ app.listen(3000, () => {
  * @param {array} jsonData - The JSON array to store the paths of files found.
  */
 function scanForFiles(directory, extension) {
-  let jsonData = [];
+  const jsonData = [];
   const files = fs.readdirSync(directory);
 
   files.forEach((filename) => {
@@ -237,12 +235,12 @@ function scanForImages(directory, jsonData) {
 
     if (!fileStat.isDirectory()) {
       if (
-        path.extname(filePath) === ".png" ||
-        path.extname(filePath) === ".jpg" ||
-        path.extname(filePath) === ".jpeg"
+        path.extname(filePath) === '.png'
+        || path.extname(filePath) === '.jpg'
+        || path.extname(filePath) === '.jpeg'
       ) {
         const nameWithoutExtension = path.parse(filename).name;
-        const imageBytes = fs.readFileSync(filePath, "base64");
+        const imageBytes = fs.readFileSync(filePath, 'base64');
 
         jsonData[nameWithoutExtension] = `data:image/${path
           .extname(filePath)
@@ -263,10 +261,10 @@ function convertToMarkdown(obj) {
   const renderer = new marked.Renderer();
   renderer.paragraph = (text) => text;
 
-  for (let key in obj) {
-    if (typeof obj[key] === "string") {
+  for (const key in obj) {
+    if (typeof obj[key] === 'string') {
       let before = obj[key];
-      before = before.replace(/\n/g, "<br>");
+      before = before.replace(/\n/g, '<br>');
       before = convertFileLinks(before);
       before = handleCustomStuff(before);
 
@@ -274,7 +272,7 @@ function convertToMarkdown(obj) {
         renderer,
         mangle: false,
       });
-    } else if (typeof obj[key] === "object") {
+    } else if (typeof obj[key] === 'object') {
       convertToMarkdown(obj[key]);
     }
   }
@@ -288,17 +286,16 @@ function convertToMarkdown(obj) {
  * @return {string} The path of the file if found, or an empty string if not found.
  */
 function findFile(fileName, arrayOfPaths) {
-  let toReturn = "";
+  let toReturn = '';
 
   arrayOfPaths.forEach((e) => {
-    let currentFileName = e.split("\\")[e.split("\\").length - 1];
+    const currentFileName = e.split('\\')[e.split('\\').length - 1];
 
     if (
-      currentFileName.toLowerCase().replace(".json", "") ===
-      fileName.toLowerCase()
+      currentFileName.toLowerCase().replace('.json', '')
+      === fileName.toLowerCase()
     ) {
       toReturn = e;
-      return;
     }
   });
 
@@ -316,7 +313,7 @@ function convertFileLinks(text) {
   return text.replace(fileLinkRegex, (_, fileName, __, customName) => {
     const linkText = customName || fileName;
 
-    return `<a href="${settings["url"]()}/wiki/${fileName}">${linkText}</a>`;
+    return `<a href="${settings.url()}/wiki/${fileName}">${linkText}</a>`;
   });
 }
 
@@ -329,24 +326,24 @@ function convertFileLinks(text) {
 function handleCustomStuff(text) {
   const customStuffRegex = /\{\{(.*?)\}\}/g;
   return text.replace(customStuffRegex, (_, match) => {
-    const parts = match.split("|");
+    const parts = match.split('|');
     const type = parts[1];
 
     switch (type) {
-      case "authenticity":
+      case 'authenticity':
         const level = parseInt(parts[2]);
         let explanation = parts[3];
-        let confidence = "";
+        let confidence = '';
 
         switch (level) {
           case 0:
-            confidence = "Unsure";
+            confidence = 'Unsure';
             break;
           case 1:
-            confidence = "Likely correct";
+            confidence = 'Likely correct';
             break;
           case 2:
-            confidence = "Confirmed";
+            confidence = 'Confirmed';
 
           default:
             break;
@@ -354,11 +351,11 @@ function handleCustomStuff(text) {
 
         explanation = explanation.replace(
           /\[([^\]]+)\]\(([^\)]+)\)/g,
-          `<a href='$2'>$1</a>`
+          '<a href=\'$2\'>$1</a>',
         );
 
         return `<span class="authenticity authenticity-${level}" tooltip="${confidence}: ${
-          explanation || "N/A"
+          explanation || 'N/A'
         }" level="${level}">${parts[0]}</span>`;
 
       default:
