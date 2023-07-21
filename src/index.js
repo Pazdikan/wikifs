@@ -12,7 +12,7 @@ const app = express();
 marked.use(gfmHeadingId());
 
 app.set("view engine", "pug");
-app.set("views", __dirname + "/views_pug");
+app.set("views", __dirname + "/views");
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 
