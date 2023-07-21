@@ -163,6 +163,10 @@ body {
   white-space: pre-wrap;
 }
 
+.data-content {
+  max-width: 55%;
+}
+
 /* Removing bullets that obsidian renders from code blocks */
 .infobox .infobox-datarow .list-bullet::before,
 .infobox .infobox-datarow .list-bullet,
@@ -401,6 +405,10 @@ textarea {
 
   .small-screen-warning {
     display: block;
+  }
+
+  .data-content {
+    max-width: 70%;
   }
 }
 
