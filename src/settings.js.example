@@ -4,6 +4,7 @@ module.exports = {
   protocol: "http://",
   host: "127.0.0.1",
   port: 23489,
+  hostport: 23489,
 
   // DO NOT MODIFY \/
   url: function () {

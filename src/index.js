@@ -190,8 +190,8 @@ app.get('*', (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log(`Example app listening on ${settings.url()}`);
+app.listen(settings["hostport"], () => {
+  console.log(`App listening on ${settings.url()}`);
 });
 /**
  * Scans a directory for files with a specific extension and adds their paths to a JSON array.
