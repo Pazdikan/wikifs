@@ -264,7 +264,7 @@ function convertToMarkdown(obj) {
   for (const key in obj) {
     if (typeof obj[key] === 'string') {
       let before = obj[key];
-      before = before.replace(/\n/g, '<br>');
+      // before = before.replace(/\n/g, '<br>');
       before = convertFileLinks(before);
       before = handleCustomStuff(before);
 
