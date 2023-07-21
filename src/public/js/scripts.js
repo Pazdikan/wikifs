@@ -120,10 +120,10 @@ if (shouldBlurImages) {
 }
 
 // Get all the gallery tabs
-const galleryTabs = document.querySelectorAll(".gallery-tab");
+galleryTabs = document.querySelectorAll(".gallery-tab");
 
 // Get all the gallery images
-const galleryImages = document.querySelectorAll(".infobox-img");
+galleryImages = document.querySelectorAll(".infobox-img");
 
 // Add click event listener to each gallery tab
 galleryTabs.forEach((tab, index) => {
@@ -138,12 +138,15 @@ galleryTabs.forEach((tab, index) => {
   });
 });
 
-const htmlTag = document.getElementsByTagName("html")[0];
-document.querySelectorAll(".theme-switch-item").forEach((item) => {
-  item.addEventListener("click", () => {
-    htmlTag.setAttribute("data-theme", item.innerText);
-    localStorage.setItem("theme", item.innerText);
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("lol");
+  const htmlTag = document.getElementsByTagName("html")[0];
+  document.querySelectorAll(".theme-switch-item").forEach((item) => {
+    item.addEventListener("click", () => {
+      htmlTag.setAttribute("data-theme", item.innerText);
+      localStorage.setItem("theme", item.innerText);
+    });
   });
-});
 
-htmlTag.setAttribute("data-theme", localStorage.getItem("theme") || "Dark");
+  htmlTag.setAttribute("data-theme", localStorage.getItem("theme") || "Dark");
+});

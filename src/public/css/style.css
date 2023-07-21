@@ -23,6 +23,14 @@ html[data-theme="Amoled"] {
   --background: #000;
 }
 
+html[data-theme="Cyberpunk 2077"] {
+  --text: #57f4fe;
+  --accent: #fd5b54;
+  --transparent: #fd5a54b4;
+  --primary: #57f4fe;
+  --background: #000;
+}
+
 * {
   transition: all 0.75s;
 }
@@ -281,6 +289,10 @@ a:active {
   text-decoration: underline;
 }
 
+#table a {
+  color: var(--text) !important;
+}
+
 #toc {
   width: fit-content;
   padding: 4px;
@@ -382,4 +394,89 @@ textarea {
   .content-col {
     font-size: 12px;
   }
+
+  #table {
+    font-size: 10px;
+  }
+
+  .small-screen-warning {
+    display: block;
+  }
+}
+
+.small-screen-warning {
+  display: none;
+}
+
+.center-home {
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 100px;
+}
+
+th {
+  cursor: pointer;
+}
+
+#table {
+  background-color: var(--primary) !important;
+  border: 1px solid var(--primary) !important;
+  border-radius: 10px;
+}
+
+/*Theme the header*/
+.tabulator-header {
+  background-color: var(--primary) !important;
+  color: var(--text) !important;
+  border: none !important;
+}
+
+/*Allow column header names to wrap lines*/
+.tabulator-col,
+tabulator-col-row-handle {
+  white-space: normal;
+  border: none !important;
+}
+
+/*Color the table rows*/
+.tabulator-row {
+  border: none !important;
+  color: var(--text);
+  background-color: var(--accent) !important;
+}
+
+/*Color even rows*/
+.tabulator-row:nth-child(even) {
+  background-color: var(--background) !important;
+  border: none !important;
+}
+
+.tabulator-col {
+  color: var(--text);
+  border: none !important;
+  background-color: var(--background) !important;
+}
+
+.authenticity {
+  text-decoration: underline dotted 2px !important;
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.authenticity-1 {
+  text-decoration-color: #ffae00 !important;
+}
+
+.tippy-box[data-theme~="1"] {
+  background-color: #7c5602;
+  padding: 2px;
+}
+
+.authenticity-2 {
+  text-decoration-color: #00ff00 !important;
+}
+
+.tippy-box[data-theme~="2"] {
+  background-color: #024d02;
+  padding: 2px;
 }

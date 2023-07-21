@@ -1,0 +1,27 @@
+nav.navbar.navbar-expand-lg.bg-body-tertiary.navbar-dark
+  .container-fluid.navbar-dark
+    a.navbar-brand(href=settings['url']()) DBFS
+
+    button.navbar-toggler(type='button', data-bs-toggle='collapse', data-bs-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+      span.navbar-toggler-icon
+
+    .collapse.navbar-collapse#navbarSupportedContent
+      ul.navbar-nav.me-auto.mb-2.mb-lg-0
+        li.nav-item.dropdown
+          a.nav-link.dropdown-toggle(href='#', role='button', data-bs-toggle='dropdown', aria-expanded='false') Theme
+          ul.dropdown-menu
+            li
+              a.dropdown-item.theme-switch-item(href='#') Dark
+            li
+              a.dropdown-item.theme-switch-item(href='#') Light
+            li
+              a.dropdown-item.theme-switch-item(href='#') Amoled
+            li
+              a.dropdown-item.theme-switch-item(href='#') Cyberpunk 2077
+
+        a.nav-link(href=`${settings['url']()}/new`) New entry
+        a.nav-link(href='https://docs.pazdikan.party/en/wikifs/About') Docs
+
+      form.d-flex(role='search')
+        input.form-control.me-2(type='search', placeholder='Search', aria-label='Search')
+        button.btn.btn-outline-success(type='submit') Search

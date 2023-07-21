@@ -1,0 +1,53 @@
+doctype html
+html(lang="en")
+  head
+    title #{file.meta.title}
+    include head.pug
+  body
+    include header.pug
+        settings
+    .container
+        .row
+            .col.order-md-first.content-col
+                h1.heading= file.meta.title
+                p#short_description!= file.content.summary
+                .toc#toc
+                .content.swing-in-top-fwd-content#content!= file.content.full
+            .col.col-auto
+                .sticky
+                    .infobox
+                        .heading
+                            h2#heading-title.tracking-in-expand= file.meta.title
+                            h1.infobox-subtitle.slide-in-top= file.meta.subtitle
+                        .infobox-gallery.swing-in-top-fwd
+                            .gallery-tabs
+                                - let index = 0;
+
+                                each value, key in infoboxImages
+                                    .gallery-tab(class=(index === 0 ? 'active' : ''))=key
+                                    - index++
+                                    
+                            - index = 0
+
+                            each value, key in infoboxImages
+                                img.infobox-img(class=(index === 0 ? 'active' : ''), src=value, alt=key)
+                                - index++
+                        each fields, category in infoboxtemplate
+                            - if (file.infobox && Object.keys(file.infobox).some((value, key) => value in fields))
+                                .infobox-group
+                                    .heading
+                                        h3= category
+                                    .infobox-data
+                                    each fieldName, key in fields
+                                        - if (key in file.infobox)
+                                            .infobox-datarow
+                                                    p.data-heading!= fieldName
+                                                    ul.data-content
+                                                        li!= file.infobox[key]
+                    .buttons-infobox
+                        div#generate_dox_button.infobox-button Plain text
+                        div#edit_button.infobox-button Edit
+    script(src="/scripts.js")
+    script(src="/wikipage.js")
+    script.
+        initEditButton('!{fileName}')

@@ -1,0 +1,56 @@
+doctype html
+html(lang="en")
+  head
+    title #{file.meta.title}
+    include head.pug
+  body
+    include header.pug
+        settings
+    .container
+        .row
+            .col.order-md-first.content-col
+                h1.heading
+                    input#heading_title_input(value=file['meta']['title'])
+
+                textarea#short_description_input(name="Short description", cols="30", rows="10")
+                    != file['content']['summary']
+
+                textarea#content_input(name="Content", cols="30", rows="10")
+                    != file['content']['full'] 
+
+                p#short_description
+                .toc#toc
+                .content.swing-in-top-fwd-content#content
+            .col.col-auto
+                .infobox
+                    .heading
+                        h2#heading-title.tracking-in-expand= file.meta.title
+                        h1.infobox-subtitle.slide-in-top
+                            input#subtitle_input(type="text", name="Subtitle", value=file.meta.subtitle)
+                    .infobox-gallery.swing-in-top-fwd
+                        .gallery-tabs
+                            - let index = 0;
+                            each value, key in infoboxImages
+                                .gallery-tab(class=(index === 0 ? 'active' : ''))=key
+                                - index++
+                                
+                        - index = 0
+                        each value, key in infoboxImages
+                            img.infobox-img(class=(index === 0 ? 'active' : ''), src=value, alt=key)
+                            - index++
+                    each fields, category in infoboxtemplate
+                            .infobox-group
+                                .heading
+                                    h3= category
+                                .infobox-data
+                                each fieldName, key in fields
+                                        .infobox-datarow
+                                                p.data-heading!= fieldName
+                                                ul.data-content
+                                                    li
+                                                        input(type="text", value=file.infobox[key], class="infobox-input", infobox-key=key)
+                .buttons-infobox
+                    div#save_to_file.infobox-button Save
+    script(src="/edit_wikipage.js") 
+    script.
+        initSave('!{fileName || ""}')

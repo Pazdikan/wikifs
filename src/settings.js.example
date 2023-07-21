@@ -1,0 +1,31 @@
+module.exports = {
+  dataPath: "<your_data_folder_path>",
+  shouldBlurImages: true,
+  protocol: "http://",
+  host: "127.0.0.1",
+  port: 23489,
+
+  // DO NOT MODIFY \/
+  url: function () {
+    return this.protocol + this.host + (this.port ? ":" + this.port : "");
+  },
+  // DO NOT MODIFY /\
+
+  authentication: {
+    permitted: ["<email_1>", "<email_2>"],
+    // Discord OAuth
+    discord: {
+      enabled: true,
+      id: "<discord_id>",
+      secret: "<discord_secret>",
+    },
+  },
+
+  // Appearance
+  fontAwesomeKit: "<fontawesome_kit_url>",
+  defaultTheme: "Dark",
+  metaTitle: "WikiFS",
+  metaDescription: "My epic wikifs instance!",
+  metaEmbedColor: "#d40405",
+  logo: "/logo.png",
+};

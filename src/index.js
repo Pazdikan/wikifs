@@ -11,8 +11,8 @@ const app = express();
 
 marked.use(gfmHeadingId());
 
-app.set("view engine", "ejs");
-app.set("views", __dirname + "/views");
+app.set("view engine", "pug");
+app.set("views", __dirname + "/views_pug");
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 
@@ -36,13 +36,22 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.render("home.ejs", {
+  let found = scanForFiles(settings.dataPath, ".json");
+  let pages = {};
+
+  found.forEach((file) => {
+    const fileName = file.split("\\").pop().split(".")[0];
+    pages[fileName] = require(file);
+  });
+
+  res.render("home", {
     settings,
+    pages,
   });
 });
 
 app.get("/new", (req, res) => {
-  res.render("edit_wikipage.ejs", {
+  res.render("edit_wikipage", {
     settings,
     fileName: "",
     infoboxImages: {},
@@ -65,7 +74,6 @@ app.post("/wiki/:file", (req, res) => {
   let found = [];
   let body = req.body;
   let file = body.fileName;
-  console.log("🚀 ~ file: index.js:45 ~ app.post ~ body:", body);
 
   found = scanForFiles(settings.dataPath, ".json");
 
@@ -99,7 +107,7 @@ app.get("/wiki/:file/edit", (req, res) => {
   let foundFile = findFile(file, found);
 
   if (foundFile === "") {
-    res.render("404.ejs", {
+    res.render("404", {
       fileName: file,
       settings,
     });
@@ -107,6 +115,8 @@ app.get("/wiki/:file/edit", (req, res) => {
   }
 
   let foundObject = require(foundFile);
+
+  console.log(foundObject);
 
   if (fs.existsSync(path.join(settings.dataPath, "images", file, "main")))
     scanForImages(
@@ -117,7 +127,7 @@ app.get("/wiki/:file/edit", (req, res) => {
   if (fs.existsSync(path.join(settings.dataPath, "images", file)))
     scanForImages(path.join(settings.dataPath, "images", file), foundImages);
 
-  res.render("edit_wikipage.ejs", {
+  res.render("edit_wikipage", {
     settings,
     file: foundObject,
     fileName: file,
@@ -142,7 +152,7 @@ app.get("/wiki/:file", (req, res) => {
   let foundFile = findFile(file, found);
 
   if (foundFile === "") {
-    res.render("404.ejs", {
+    res.render("404", {
       fileName: file,
       settings,
     });
@@ -161,7 +171,7 @@ app.get("/wiki/:file", (req, res) => {
   if (fs.existsSync(path.join(settings.dataPath, "images", file)))
     scanForImages(path.join(settings.dataPath, "images", file), foundImages);
 
-  res.render("wikipage.ejs", {
+  res.render("wikipage", {
     settings,
     file: foundObject,
     fileName: file,
@@ -177,7 +187,7 @@ app.get("/wiki/:file", (req, res) => {
 
 // 404 for all other routes
 app.get("*", (req, res) => {
-  res.render("404.ejs", {
+  res.render("404", {
     settings,
   });
 });
@@ -256,7 +266,9 @@ function convertToMarkdown(obj) {
   for (let key in obj) {
     if (typeof obj[key] === "string") {
       let before = obj[key];
+      before = before.replace(/\n/g, "<br>");
       before = convertFileLinks(before);
+      before = handleCustomStuff(before);
 
       obj[key] = marked.parse(before, {
         renderer,
@@ -305,5 +317,52 @@ function convertFileLinks(text) {
     const linkText = customName || fileName;
 
     return `<a href="${settings["url"]()}/wiki/${fileName}">${linkText}</a>`;
+  });
+}
+
+/**
+ * Replaces "custom stuff" in the given text with processed values.
+ *
+ * @param {string} text - The text containing custom stuff.
+ * @return {string} The text with custom stuff replaced.
+ */
+function handleCustomStuff(text) {
+  const customStuffRegex = /\{\{(.*?)\}\}/g;
+  return text.replace(customStuffRegex, (_, match) => {
+    const parts = match.split("|");
+    const type = parts[1];
+
+    switch (type) {
+      case "authenticity":
+        const level = parseInt(parts[2]);
+        let explanation = parts[3];
+        let confidence = "";
+
+        switch (level) {
+          case 0:
+            confidence = "Unsure";
+            break;
+          case 1:
+            confidence = "Likely correct";
+            break;
+          case 2:
+            confidence = "Confirmed";
+
+          default:
+            break;
+        }
+
+        explanation = explanation.replace(
+          /\[([^\]]+)\]\(([^\)]+)\)/g,
+          `<a href='$2'>$1</a>`
+        );
+
+        return `<span class="authenticity authenticity-${level}" tooltip="${confidence}: ${
+          explanation || "N/A"
+        }" level="${level}">${parts[0]}</span>`;
+
+      default:
+        return match; // Return the original match if the type is not recognized
+    }
   });
 }
