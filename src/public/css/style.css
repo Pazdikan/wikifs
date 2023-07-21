@@ -68,8 +68,8 @@ body {
     Roboto, "Inter", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
     "Microsoft YaHei Light", sans-serif;
 
-  max-width: 250px;
-  width: 250px;
+  max-width: 300px;
+  width: 300px;
   color: var(--accent);
 
   border: 2px solid var(--transparent);
@@ -150,7 +150,7 @@ body {
 }
 
 .infobox-datarow .data-heading {
-  width: 40%;
+  width: 35%;
   font-weight: 500;
 }
 
@@ -164,7 +164,7 @@ body {
 }
 
 .data-content {
-  max-width: 55%;
+  max-width: 60% !important;
 }
 
 /* Removing bullets that obsidian renders from code blocks */
@@ -407,8 +407,14 @@ textarea {
     display: block;
   }
 
+  .infobox-datarow .data-heading {
+    width: 30%;
+    font-weight: 500;
+  }
+
+  
   .data-content {
-    max-width: 70%;
+    max-width: 75%;
   }
 }
 
