@@ -6,6 +6,7 @@ const { gfmHeadingId } = require('marked-gfm-heading-id');
 const session = require('express-session');
 const { randomBytes } = require('crypto');
 const settings = require('./settings');
+const log = require('./modules/logger/logger');
 
 const app = express();
 
@@ -24,13 +25,21 @@ app.use(
   }),
 );
 
-app.use('/api/' + 'auth', require('./auth/discord'));
+app.use('/api/' + 'auth', require('./modules/auth/discord'));
 
 app.use((req, res, next) => {
   if (!req.url.includes('api') && !req.session.user) {
     req.session.redirectTo = req.originalUrl;
-    return res.redirect('/api/auth/discord');
+    return res.render('login', {
+      settings
+    })
   }
+
+  next();
+});
+
+app.use((req, res, next) => {
+  log.http(`${req.method} ${req.url} from ${req.ip}`);
 
   next();
 });
@@ -191,7 +200,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(settings["hostport"], () => {
-  console.log(`App listening on ${settings.url()}`);
+  log.info(`App listening on ${settings.url()}`);
 });
 /**
  * Scans a directory for files with a specific extension and adds their paths to a JSON array.

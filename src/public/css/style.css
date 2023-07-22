@@ -416,6 +416,10 @@ textarea {
   .data-content {
     max-width: 75%;
   }
+
+  .shitpost {
+    width: 90vw;
+  }
 }
 
 .small-screen-warning {
@@ -493,4 +497,18 @@ tabulator-col-row-handle {
 .tippy-box[data-theme~="2"] {
   background-color: #024d02;
   padding: 2px;
+}
+
+.shitpost {
+  width: 50vw;
+}
+
+.loginbtn {
+  color: var(--text);
+  background-color: var(--accent);
+
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 10px;
 }

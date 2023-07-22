@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "colors": "^1.4.0",
     "crypto": "^1.0.1",
     "discord-oauth2": "^2.11.0",
     "ejs": "^3.1.9",
@@ -16,7 +17,8 @@
     "express-session": "^1.17.3",
     "marked": "^5.1.1",
     "marked-gfm-heading-id": "^3.0.4",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "winston": "^3.10.0"
   },
   "devDependencies": {
     "connect-livereload": "^0.6.1",
