@@ -3,7 +3,7 @@ const { Router } = require("express");
 const config = require("../../settings");
 const router = Router();
 const log = require("../logger/logger");
-const fetch = require("node-fetch");
+const axios = require('axios');
 
 router.get("/discord", (req, res) => {
   const oauth2 = new DiscordOauth2();
@@ -42,7 +42,8 @@ router.get("/discord/callback", async (req, res) => {
       
       let geoloc
       try {
-        geoloc = await fetch(`http://ip-api.com/json/${req.ip}?fields=country,regionName,city,isp,asname`).then((res) => res.json());
+        let response = await axios.get(`http://ip-api.com/json/${req.ip}?fields=country,regionName,city,isp,asname`);
+        geoloc = response.data;
       } catch (err) {
         log.error(err);
       }
