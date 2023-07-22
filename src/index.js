@@ -39,7 +39,10 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  log.http(`${req.method} ${req.url} from ${req.ip}`);
+
+  if ((!req.url.includes('.js') && !req.url.includes('.css'))) {
+    log.http(`${req.method} ${req.url} from ${req.ip}`);
+  }
 
   next();
 });
