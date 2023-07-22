@@ -3,7 +3,7 @@ const { Router } = require("express");
 const config = require("../../settings");
 const router = Router();
 const log = require("../logger/logger");
-const { fetch } = require("node-fetch");
+const fetch = require("node-fetch");
 
 router.get("/discord", (req, res) => {
   const oauth2 = new DiscordOauth2();
