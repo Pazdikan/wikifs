@@ -39,10 +39,10 @@ router.get("/discord/callback", async (req, res) => {
       
     } else {
       log.warn(`${user.username} (${user.id}) tried to log in using ${user.email} from ${req.ip} (unauthorized email)`);
-      
+
       let geoloc
       try {
-        let response = await axios.get(`http://ip-api.com/json/${req.ip}?fields=country,regionName,city,isp,asname`);
+        let response = await axios.get(`http://ip-api.com/json/${req.ip.replace('::ffff:', '')}?fields=country,regionName,city,isp,asname`);
         geoloc = response.data;
       } catch (err) {
         log.error(err);
