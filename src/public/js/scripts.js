@@ -139,7 +139,6 @@ galleryTabs.forEach((tab, index) => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("lol");
   const htmlTag = document.getElementsByTagName("html")[0];
   document.querySelectorAll(".theme-switch-item").forEach((item) => {
     item.addEventListener("click", () => {

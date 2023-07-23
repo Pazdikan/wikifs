@@ -520,3 +520,7 @@ tabulator-col-row-handle {
 .shitpostimg {
   width: 30vw
 }
+
+.data-content .status .Dead {
+  color: green;
+}

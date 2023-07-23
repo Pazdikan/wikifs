@@ -42,7 +42,7 @@ html(lang="en")
                                         - if (key in file.infobox)
                                             .infobox-datarow
                                                     p.data-heading!= fieldName
-                                                    ul.data-content
+                                                    ul.data-content(class!=`${key}-${file.infobox[key].replace(/"/g, '')}`)
                                                         li!= file.infobox[key]
                     .buttons-infobox
                         div#generate_dox_button.infobox-button Plain text

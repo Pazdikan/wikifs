@@ -128,8 +128,6 @@ app.get('/wiki/:file/edit', (req, res) => {
 
   const foundObject = require(foundFile);
 
-  console.log(foundObject);
-
   if (fs.existsSync(path.join(settings.dataPath, 'images', file, 'main'))) {
     scanForImages(
       path.join(settings.dataPath, 'images', file, 'main'),
@@ -276,9 +274,17 @@ function convertToMarkdown(obj) {
   for (const key in obj) {
     if (typeof obj[key] === 'string') {
       let before = obj[key];
-      // before = before.replace(/\n/g, '<br>');
       before = convertFileLinks(before);
       before = handleCustomStuff(before);
+
+      if (key === "date_of_birth") {
+        const dateRegex = /(\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s\d{1,2},\s\d{4}\b)/g;
+        
+        before = before.replace(dateRegex, (match) => {
+          const age = calculateAge(match);
+          return `${match} <small>(age ${age})</small>`;
+        });
+      }
 
       obj[key] = marked.parse(before, {
         renderer,
@@ -289,6 +295,7 @@ function convertToMarkdown(obj) {
     }
   }
 }
+
 
 /**
  * Finds a file with the specified name in an array of paths.
@@ -374,4 +381,23 @@ function handleCustomStuff(text) {
         return match; // Return the original match if the type is not recognized
     }
   });
+}
+
+/**
+ * Calculates the age based on the given date of birth.
+ *
+ * @param {string} dateOfBirth - The date of birth in the format 'YYYY-MM-DD'.
+ * @return {number} The calculated age.
+ */
+function calculateAge(dateOfBirth) {
+  const dob = new Date(dateOfBirth);
+  const today = new Date();
+  let age = today.getFullYear() - dob.getFullYear();
+  const monthDiff = today.getMonth() - dob.getMonth();
+
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
+
+  return age;
 }
