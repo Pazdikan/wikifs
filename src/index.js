@@ -304,10 +304,6 @@ function convertToMarkdown(obj) {
           break;
       }
 
-      if (key === "date_of_birth") {
-        // Append age to the DoB
-      }
-
       obj[key] = marked.parse(before, {
         renderer,
         mangle: false,
