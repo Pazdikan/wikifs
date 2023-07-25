@@ -11,7 +11,8 @@
     "date_of_birth": "Date of Birth",
     "place_of_birth": "Place of Birth",
     "date_of_death": "Date of Death",
-    "place_of_death": "Place of Death"
+    "place_of_death": "Place of Death",
+    "first_met": "First Met"
   },
   "Biographical Information": {
     "vehicles": "Vehicles"

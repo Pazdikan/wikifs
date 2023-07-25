@@ -412,7 +412,6 @@ textarea {
     font-weight: 500;
   }
 
-  
   .data-content {
     max-width: 75%;
   }
@@ -482,7 +481,6 @@ tabulator-col-row-handle {
 .authenticity {
   text-decoration: underline dotted 2px !important;
   border-radius: 4px;
-  padding: 2px;
 }
 
 .authenticity-1 {
@@ -518,7 +516,7 @@ tabulator-col-row-handle {
 }
 
 .shitpostimg {
-  width: 30vw
+  width: 30vw;
 }
 
 .data-content .status .Dead {

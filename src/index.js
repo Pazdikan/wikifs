@@ -1,125 +1,127 @@
-const { marked } = require('marked');
-const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const { gfmHeadingId } = require('marked-gfm-heading-id');
-const session = require('express-session');
-const { randomBytes } = require('crypto');
-const settings = require('./settings');
-const log = require('./modules/logger/logger');
+const { marked } = require("marked");
+const express = require("express");
+const path = require("path");
+const fs = require("fs");
+const { gfmHeadingId } = require("marked-gfm-heading-id");
+const session = require("express-session");
+const { randomBytes } = require("crypto");
+const settings = require("./settings");
+const log = require("./modules/logger/logger");
 
 const app = express();
 
 marked.use(gfmHeadingId());
 
-app.set('view engine', 'pug');
-app.set('views', `${__dirname}/views`);
+app.set("view engine", "pug");
+app.set("views", `${__dirname}/views`);
 app.use(express.static(`${__dirname}/public`));
 app.use(express.json());
 
 app.use(
   session({
-    secret: randomBytes(32).toString('hex'),
+    secret: randomBytes(32).toString("hex"),
     resave: false,
     saveUninitialized: true,
-  }),
+  })
 );
 
-app.use('/api/' + 'auth', require('./modules/auth/discord'));
+app.use("/api/" + "auth", require("./modules/auth/discord"));
 
 app.use((req, res, next) => {
-  if (!req.url.includes('api') && !req.session.user) {
+  if (!req.url.includes("api") && !req.session.user) {
     req.session.redirectTo = req.originalUrl;
-    return res.render('login', {
-      settings
-    })
+    return res.render("login", {
+      settings,
+    });
   }
 
   next();
 });
 
 app.use((req, res, next) => {
-
-  if ((!req.url.includes('.js') && !req.url.includes('.css'))) {
+  if (!req.url.includes(".js") && !req.url.includes(".css")) {
     log.http(`${req.method} ${req.url} from ${req.ip}`);
   }
 
   next();
 });
 
-app.get('/', (req, res) => {
-  const found = scanForFiles(settings.dataPath, '.json');
+app.get("/", (req, res) => {
+  const found = scanForFiles(settings.dataPath, ".json");
   const pages = {};
 
   found.forEach((file) => {
-    const fileName = file.split(settings["dataPathSplitter"]).pop().split('.')[0];
+    const fileName = file
+      .split(settings["dataPathSplitter"])
+      .pop()
+      .split(".")[0];
     pages[fileName] = require(file);
   });
 
-  res.render('home', {
+  res.render("home", {
     settings,
     pages,
   });
 });
 
-app.get('/new', (req, res) => {
-  res.render('edit_wikipage', {
+app.get("/new", (req, res) => {
+  res.render("edit_wikipage", {
     settings,
-    fileName: '',
+    fileName: "",
     infoboxImages: {},
     file: {
       meta: {
-        title: '',
-        subtitle: '',
+        title: "",
+        subtitle: "",
       },
       infobox: {},
       content: {
-        summary: '',
-        full: '',
+        summary: "",
+        full: "",
       },
     },
-    infoboxtemplate: require(path.join(__dirname, 'infobox.json')),
+    infoboxtemplate: require(path.join(__dirname, "infobox.json")),
   });
 });
 
-app.post('/wiki/:file', (req, res) => {
+app.post("/wiki/:file", (req, res) => {
   let found = [];
   const { body } = req;
   const file = body.fileName;
 
-  found = scanForFiles(settings.dataPath, '.json');
+  found = scanForFiles(settings.dataPath, ".json");
 
   const foundFile = findFile(file, found);
 
-  if (foundFile === '') {
+  if (foundFile === "") {
     fs.writeFileSync(
       path.join(settings.dataPath, `${file}.json`),
-      JSON.stringify(body, null, 2),
+      JSON.stringify(body, null, 2)
     );
     return res.status(200).json({
-      status: 'OK',
+      status: "OK",
     });
   }
 
   fs.writeFileSync(foundFile, JSON.stringify(body, null, 2));
 
   return res.status(200).json({
-    status: 'OK',
+    status: "OK",
   });
 });
 
-app.get('/wiki/:file/edit', (req, res) => {
+app.get("/wiki/:file/edit", (req, res) => {
   const { file } = req.params;
   let found = [];
   const foundImages = {};
   const foundInfoboxImages = {};
 
-  found = scanForFiles(settings.dataPath, '.json');
+  found = scanForFiles(settings.dataPath, ".json");
 
   const foundFile = findFile(file, found);
 
-  if (foundFile === '') {
-    res.render('404', {
+  if (foundFile === "") {
+    res.render("404", {
       fileName: file,
       settings,
     });
@@ -128,40 +130,42 @@ app.get('/wiki/:file/edit', (req, res) => {
 
   const foundObject = require(foundFile);
 
-  if (fs.existsSync(path.join(settings.dataPath, 'images', file, 'main'))) {
+  if (fs.existsSync(path.join(settings.dataPath, "images", file, "main"))) {
     scanForImages(
-      path.join(settings.dataPath, 'images', file, 'main'),
-      foundInfoboxImages,
+      path.join(settings.dataPath, "images", file, "main"),
+      foundInfoboxImages
     );
   }
 
-  if (fs.existsSync(path.join(settings.dataPath, 'images', file))) { scanForImages(path.join(settings.dataPath, 'images', file), foundImages); }
+  if (fs.existsSync(path.join(settings.dataPath, "images", file))) {
+    scanForImages(path.join(settings.dataPath, "images", file), foundImages);
+  }
 
-  res.render('edit_wikipage', {
+  res.render("edit_wikipage", {
     settings,
     file: foundObject,
     fileName: file,
     infoboxImages: foundInfoboxImages,
     images: foundImages,
 
-    infoboxtemplate: require(path.join(__dirname, 'infobox.json')),
+    infoboxtemplate: require(path.join(__dirname, "infobox.json")),
   });
 
   delete require.cache[require.resolve(foundFile)];
 });
 
-app.get('/wiki/:file', (req, res) => {
+app.get("/wiki/:file", (req, res) => {
   const { file } = req.params;
   let found = [];
   const foundImages = {};
   const foundInfoboxImages = {};
 
-  found = scanForFiles(settings.dataPath, '.json');
+  found = scanForFiles(settings.dataPath, ".json");
 
   const foundFile = findFile(file, found);
 
-  if (foundFile === '') {
-    res.render('404', {
+  if (foundFile === "") {
+    res.render("404", {
       fileName: file,
       settings,
     });
@@ -171,31 +175,33 @@ app.get('/wiki/:file', (req, res) => {
   const foundObject = require(foundFile);
   convertToMarkdown(foundObject);
 
-  if (fs.existsSync(path.join(settings.dataPath, 'images', file, 'main'))) {
+  if (fs.existsSync(path.join(settings.dataPath, "images", file, "main"))) {
     scanForImages(
-      path.join(settings.dataPath, 'images', file, 'main'),
-      foundInfoboxImages,
+      path.join(settings.dataPath, "images", file, "main"),
+      foundInfoboxImages
     );
   }
 
-  if (fs.existsSync(path.join(settings.dataPath, 'images', file))) { scanForImages(path.join(settings.dataPath, 'images', file), foundImages); }
+  if (fs.existsSync(path.join(settings.dataPath, "images", file))) {
+    scanForImages(path.join(settings.dataPath, "images", file), foundImages);
+  }
 
-  res.render('wikipage', {
+  res.render("wikipage", {
     settings,
     file: foundObject,
     fileName: file,
     infoboxImages: foundInfoboxImages,
     images: foundImages,
 
-    infoboxtemplate: require(path.join(__dirname, 'infobox.json')),
+    infoboxtemplate: require(path.join(__dirname, "infobox.json")),
   });
 
   delete require.cache[require.resolve(foundFile)];
 });
 
 // 404 for all other routes
-app.get('*', (req, res) => {
-  res.render('404', {
+app.get("*", (req, res) => {
+  res.render("404", {
     settings,
   });
 });
@@ -245,12 +251,12 @@ function scanForImages(directory, jsonData) {
 
     if (!fileStat.isDirectory()) {
       if (
-        path.extname(filePath) === '.png'
-        || path.extname(filePath) === '.jpg'
-        || path.extname(filePath) === '.jpeg'
+        path.extname(filePath) === ".png" ||
+        path.extname(filePath) === ".jpg" ||
+        path.extname(filePath) === ".jpeg"
       ) {
         const nameWithoutExtension = path.parse(filename).name;
-        const imageBytes = fs.readFileSync(filePath, 'base64');
+        const imageBytes = fs.readFileSync(filePath, "base64");
 
         jsonData[nameWithoutExtension] = `data:image/${path
           .extname(filePath)
@@ -272,30 +278,45 @@ function convertToMarkdown(obj) {
   renderer.paragraph = (text) => text;
 
   for (const key in obj) {
-    if (typeof obj[key] === 'string') {
+    if (typeof obj[key] === "string") {
       let before = obj[key];
       before = convertFileLinks(before);
       before = handleCustomStuff(before);
 
+      const dateRegex =
+        /(\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s\d{1,2},\s\d{4}\b)/g;
+
+      switch (key) {
+        case "date_of_birth":
+          before = before.replace(dateRegex, (match) => {
+            const age = calculateAge(match);
+            return `${match} <small>(age ${age})</small>`;
+          });
+          break;
+        case "date_of_death":
+          break;
+
+        case "first_met":
+          before = before.replace(dateRegex, (match) => {
+            const timeAgo = calculateTimeAgo(match);
+            return `${match} <small>(${timeAgo})</small>`;
+          });
+          break;
+      }
+
       if (key === "date_of_birth") {
-        const dateRegex = /(\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s\d{1,2},\s\d{4}\b)/g;
-        
-        before = before.replace(dateRegex, (match) => {
-          const age = calculateAge(match);
-          return `${match} <small>(age ${age})</small>`;
-        });
+        // Append age to the DoB
       }
 
       obj[key] = marked.parse(before, {
         renderer,
         mangle: false,
       });
-    } else if (typeof obj[key] === 'object') {
+    } else if (typeof obj[key] === "object") {
       convertToMarkdown(obj[key]);
     }
   }
 }
-
 
 /**
  * Finds a file with the specified name in an array of paths.
@@ -305,14 +326,16 @@ function convertToMarkdown(obj) {
  * @return {string} The path of the file if found, or an empty string if not found.
  */
 function findFile(fileName, arrayOfPaths) {
-  let toReturn = '';
+  let toReturn = "";
 
   arrayOfPaths.forEach((e) => {
-    const currentFileName = e.split(settings["dataPathSplitter"])[e.split(settings["dataPathSplitter"]).length - 1];
+    const currentFileName = e.split(settings["dataPathSplitter"])[
+      e.split(settings["dataPathSplitter"]).length - 1
+    ];
 
     if (
-      currentFileName.toLowerCase().replace('.json', '')
-      === fileName.toLowerCase()
+      currentFileName.toLowerCase().replace(".json", "") ===
+      fileName.toLowerCase()
     ) {
       toReturn = e;
     }
@@ -345,24 +368,24 @@ function convertFileLinks(text) {
 function handleCustomStuff(text) {
   const customStuffRegex = /\{\{(.*?)\}\}/g;
   return text.replace(customStuffRegex, (_, match) => {
-    const parts = match.split('|');
+    const parts = match.split("|");
     const type = parts[1];
 
     switch (type) {
-      case 'authenticity':
+      case "authenticity":
         const level = parseInt(parts[2]);
         let explanation = parts[3];
-        let confidence = '';
+        let confidence = "";
 
         switch (level) {
           case 0:
-            confidence = 'Unsure';
+            confidence = "Unsure";
             break;
           case 1:
-            confidence = 'Likely correct';
+            confidence = "Likely correct";
             break;
           case 2:
-            confidence = 'Confirmed';
+            confidence = "Confirmed";
 
           default:
             break;
@@ -370,11 +393,11 @@ function handleCustomStuff(text) {
 
         explanation = explanation.replace(
           /\[([^\]]+)\]\(([^\)]+)\)/g,
-          '<a href=\'$2\'>$1</a>',
+          "<a href='$2'>$1</a>"
         );
 
-        return `<span class="authenticity authenticity-${level}" tooltip="${confidence}: ${
-          explanation || 'N/A'
+        return `<span class="authenticity authenticity-${level}" tooltip="<b>${confidence}:</b> ${
+          explanation || "N/A"
         }" level="${level}">${parts[0]}</span>`;
 
       default:
@@ -400,4 +423,40 @@ function calculateAge(dateOfBirth) {
   }
 
   return age;
+}
+
+/**
+ * Calculates the dynamic time ago representation based on the given date of birth.
+ *
+ * @param {string} dateFromThePast - The date of birth in the format 'YYYY-MM-DD'.
+ * @return {string} The dynamic age representation.
+ */
+function calculateTimeAgo(dateFromThePast) {
+  const dob = new Date(dateFromThePast);
+  const today = new Date();
+
+  // Calculate the time difference in milliseconds
+  const timeDiff = today.getTime() - dob.getTime();
+
+  // Calculate the time difference in days, months, and years
+  const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+  const monthsDiff =
+    today.getMonth() -
+    dob.getMonth() +
+    12 * (today.getFullYear() - dob.getFullYear());
+  const yearsDiff = today.getFullYear() - dob.getFullYear();
+
+  if (daysDiff === 1) {
+    return "1 day ago";
+  } else if (daysDiff > 1 && daysDiff < 30) {
+    return `${daysDiff} days ago`;
+  } else if (monthsDiff === 1) {
+    return "1 month ago";
+  } else if (monthsDiff > 1 && monthsDiff < 12) {
+    return `${monthsDiff} months ago`;
+  } else if (yearsDiff === 1) {
+    return "1 year ago";
+  } else {
+    return `${yearsDiff} years ago`;
+  }
 }
