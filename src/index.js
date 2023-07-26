@@ -239,6 +239,9 @@ app.delete("/wiki/:file/image/:image", (req, res) => {
   }
 
   fs.unlinkSync(foundImage);
+  res.status(200).send({
+    status: "OK",
+  });
 });
 
 app.post("/wiki/:file/image/:image", (req, res) => {
@@ -252,10 +255,18 @@ app.post("/wiki/:file/image/:image", (req, res) => {
     ),
     (err) => {
       if (err) {
+        res.status(500).send({
+          status: "ERROR (CHECK SERVER CONSOLE)",
+        });
+
         console.error(err);
+        return;
       }
     }
   );
+  res.status(200).send({
+    status: "OK",
+  });
 });
 
 // 404 for all other routes

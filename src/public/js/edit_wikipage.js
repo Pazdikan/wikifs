@@ -160,8 +160,14 @@ document.getElementById("manage_images").addEventListener("click", () => {
             }),
           }).then(function (response) {
             if (response.ok) {
-              window.location.href = `/wiki/${fileName}`;
+              window.location.href = `/wiki/${currentFileName}`;
             } else {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: `Error: ${response.status}`,
+              });
+
               throw new Error("Error: " + response.status);
             }
           });
@@ -179,8 +185,14 @@ document.getElementById("manage_images").addEventListener("click", () => {
           },
         }).then(function (response) {
           if (response.ok) {
-            window.location.href = `/wiki/${fileName}`;
+            window.location.href = `/wiki/${currentFileName}`;
           } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: `Error: ${response.status}`,
+            });
+
             throw new Error("Error: " + response.status);
           }
         });
