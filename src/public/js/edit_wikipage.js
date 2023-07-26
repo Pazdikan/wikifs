@@ -1,4 +1,8 @@
+let currentFileName = "";
+
 function initSave(fileName) {
+  currentFileName = fileName;
+
   document.getElementById("save_to_file").addEventListener("click", () => {
     if (fileName === "") {
       fileName = window.prompt("Enter file name");
@@ -69,3 +73,124 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("heading-title").innerHTML = this.value;
     });
 });
+
+let uploadedPhotos = {};
+
+document.getElementById("manage_images").addEventListener("click", () => {
+  Swal.fire({
+    title: "Warning!",
+    text: "If you changed any values here, please save the file before proceeding. Otherwise all changes will be lost.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Continue",
+    cancelButtonText: "Dismiss",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Function to display the photo upload popup
+      function showPhotoUploadPopup() {
+        // Create an HTML element to hold the uploaded photos
+        const uploadedPhotosContainer = document.createElement("div");
+
+        // Iterate through the uploaded photos and create an HTML element for each photo
+
+        for (const photo in uploadedPhotos) {
+          if (Object.hasOwnProperty.call(uploadedPhotos, photo)) {
+            const image = uploadedPhotos[photo];
+            const photoElement = document.createElement("div");
+            photoElement.textContent = photo;
+
+            // Add a delete button for each photo
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.addEventListener("click", () => {
+              // Call a function to delete the photo
+              deletePhoto(photo);
+            });
+
+            photoElement.appendChild(deleteButton);
+            uploadedPhotosContainer.appendChild(photoElement);
+          }
+        }
+
+        const fileSelector = document.createElement("input");
+        fileSelector.type = "file";
+        fileSelector.id = "file_to_upload";
+
+        const selectedFileName = document.createElement("input");
+        selectedFileName.type = "text";
+        selectedFileName.id = "filename_to_upload";
+        selectedFileName.placeholder = "Enter file name with extension here";
+
+        uploadedPhotosContainer.appendChild(fileSelector);
+        uploadedPhotosContainer.appendChild(selectedFileName);
+
+        // Create the SweetAlert2 popup
+        Swal.fire({
+          title: "Uploaded Photos",
+          html: uploadedPhotosContainer,
+          showCancelButton: true,
+          confirmButtonText: "Upload",
+          cancelButtonText: "Close",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            handlePhotoUpload(fileSelector.files[0], selectedFileName.value);
+          }
+        });
+      }
+
+      // Example function to handle photo upload
+      function handlePhotoUpload(file, name) {
+        if (!file) {
+          return;
+        }
+
+        const reader = new FileReader();
+        let base64Image;
+
+        reader.onloadend = function () {
+          base64Image = reader.result;
+
+          fetch(`/wiki/${currentFileName}/image/${name}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              image: base64Image,
+            }),
+          }).then(function (response) {
+            if (response.ok) {
+              window.location.href = `/wiki/${fileName}`;
+            } else {
+              throw new Error("Error: " + response.status);
+            }
+          });
+        };
+
+        reader.readAsDataURL(file);
+      }
+
+      // Example function to delete a photo
+      function deletePhoto(photoId) {
+        fetch(`/wiki/${currentFileName}/image/${photoId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then(function (response) {
+          if (response.ok) {
+            window.location.href = `/wiki/${fileName}`;
+          } else {
+            throw new Error("Error: " + response.status);
+          }
+        });
+      }
+
+      showPhotoUploadPopup();
+    }
+  });
+});
+
+function getUploadedPhotos(photos) {
+  uploadedPhotos = JSON.parse(photos);
+}

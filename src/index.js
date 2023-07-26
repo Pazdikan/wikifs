@@ -199,6 +199,65 @@ app.get("/wiki/:file", (req, res) => {
   delete require.cache[require.resolve(foundFile)];
 });
 
+app.delete("/wiki/:file/image/:image", (req, res) => {
+  const { file, image } = req.params;
+  let found = [];
+  const foundImages = {};
+  let foundInfoboxImage = {};
+
+  found = scanForFiles(settings.dataPath, ".json");
+
+  const foundFile = findFile(file, found);
+
+  if (foundFile === "") {
+    res.status(404).send({
+      status: `NOTE "${file}" NOT FOUND`,
+    });
+    return;
+  }
+
+  if (fs.existsSync(path.join(settings.dataPath, "images", file, "main"))) {
+    foundInfoboxImage = findFile(
+      image,
+      fs.readdirSync(path.join(settings.dataPath, "images", file, "main"))
+    );
+  }
+
+  let foundImage = path.join(
+    settings.dataPath,
+    "images",
+    file,
+    "main",
+    foundInfoboxImage
+  );
+
+  if (!foundImage) {
+    res.status(404).send({
+      status: `NOTE "${image}" NOT FOUND`,
+    });
+    return;
+  }
+
+  fs.unlinkSync(foundImage);
+});
+
+app.post("/wiki/:file/image/:image", (req, res) => {
+  const { file, image } = req.params;
+
+  fs.writeFile(
+    path.join(settings.dataPath, "images", file, "main", image),
+    new Buffer.from(
+      req.body.image.replace(/^data:image\/\w+;base64,/, ""),
+      "base64"
+    ),
+    (err) => {
+      if (err) {
+        console.error(err);
+      }
+    }
+  );
+});
+
 // 404 for all other routes
 app.get("*", (req, res) => {
   res.render("404", {
@@ -330,8 +389,7 @@ function findFile(fileName, arrayOfPaths) {
     ];
 
     if (
-      currentFileName.toLowerCase().replace(".json", "") ===
-      fileName.toLowerCase()
+      currentFileName.toLowerCase().split(".")[0] === fileName.toLowerCase()
     ) {
       toReturn = e;
     }

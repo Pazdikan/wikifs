@@ -505,7 +505,8 @@ tabulator-col-row-handle {
   width: 50vw;
 }
 
-.loginbtn {
+.loginbtn,
+button {
   color: var(--text);
   background-color: var(--accent);
 
@@ -521,4 +522,9 @@ tabulator-col-row-handle {
 
 .data-content .status .Dead {
   color: green;
+}
+
+.swal2-popup {
+  color: var(--text);
+  background-color: var(--background);
 }

@@ -51,6 +51,8 @@ html(lang="en")
                                                         input(type="text", value=file.infobox[key], class="infobox-input", infobox-key=key)
                 .buttons-infobox
                     div#save_to_file.infobox-button Save
+                    div#manage_images.infobox-button Edit images 
     script(src="/js/edit_wikipage.js") 
     script.
         initSave('!{fileName || ""}')
+        getUploadedPhotos('!{JSON.stringify(infoboxImages)}')
