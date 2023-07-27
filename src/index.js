@@ -251,9 +251,14 @@ app.delete("/wiki/:file/image/:image", (req, res) => {
 
 app.post("/wiki/:file/image/:image", (req, res) => {
   const { file, image } = req.params;
+  const directoryPath = path.join(settings.dataPath, "images", file, "main");
+
+  if (!fs.existsSync(directoryPath)) {
+    fs.mkdirSync(directoryPath, { recursive: true });
+  }
 
   fs.writeFile(
-    path.join(settings.dataPath, "images", file, "main", image),
+    path.join(directoryPath, image),
     new Buffer.from(
       req.body.image.replace(/^data:image\/\w+;base64,/, ""),
       "base64"
@@ -264,7 +269,7 @@ app.post("/wiki/:file/image/:image", (req, res) => {
           res.status(500).send({ status: "ERROR (CHECK SERVER CONSOLE)" });
         }
 
-        console.error(err);
+        log.error(err);
         return;
       }
     }

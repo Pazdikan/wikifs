@@ -1,6 +1,4 @@
 function generateTable(pages, settings, url) {
-  console.log(pages, settings);
-
   let tableData = [];
 
   for (const key in pages) {
