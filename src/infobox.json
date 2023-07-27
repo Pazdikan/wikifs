@@ -1,5 +1,5 @@
 {
-  "Biological Information": {
+  "Biological": {
     "full_name": "Full name",
     "aliases": "Aliases",
     "status": "Status",
@@ -14,10 +14,19 @@
     "place_of_death": "Place of Death",
     "first_met": "First Met"
   },
-  "Biographical Information": {
-    "vehicles": "Vehicles"
+  "Equipment": {
+    "vehicles": "Vehicles",
+    "weapons": "Weapons",
+    "phone": "Phone",
+    "computer": "Computer",
+    "mouse": "Mouse",
+    "keyboard": "Keyboard",
+    "headphones": "Headphones",
+    "speakers": "Speakers",
+    "monitor": "Monitor",
+    "tv": "TV"
   },
-  "Vehicle Information": {
+  "Vehicle": {
     "vehicle_model": "Model",
     "vehicle_year": "Year",
     "vehicle_color": "Color",
@@ -34,7 +43,7 @@
     "vehicle_gearbox": "Gearbox",
     "drive": "Drive"
   },
-  "Physical Information": {
+  "Physical": {
     "height": "Height",
     "weight": "Weight",
     "eye_color": "Eye color",
@@ -42,6 +51,21 @@
     "hair_color": "Hair color",
     "skin_color": "Skin color",
     "body_type": "Body type"
+  },
+  "Family": {
+    "home": "Home",
+    "relationship": "Relationship",
+    "parents": "Parents",
+    "siblings": "Siblings",
+    "children": "Children"
+  },
+  "Work and Hobbies": {
+    "occupation": "Occupation",
+    "affiliation": "Affiliation",
+    "company": "Company",
+    "education": "Education",
+    "hobbies": "Hobbies",
+    "interests": "Interests"
   },
   "Social": {
     "email": "Email",
@@ -73,20 +97,5 @@
     "wattpad": "WattPad",
     "wykop": "Wykop",
     "youtube": "<i class='fa-brands fa-youtube'></i> YouTube"
-  },
-  "Family Information": {
-    "home": "Home",
-    "relationship": "Relationship",
-    "parents": "Parents",
-    "siblings": "Siblings",
-    "children": "Children"
-  },
-  "Work and Hobbies": {
-    "occupation": "Occupation",
-    "affiliation": "Affiliation",
-    "company": "Company",
-    "education": "Education",
-    "hobbies": "Hobbies",
-    "interests": "Interests"
   }
 }
