@@ -1,32 +1,39 @@
 module.exports = {
-  dataPath: "<your_data_folder_path>",
-  shouldBlurImages: true,
+  // Important / Backend !!!
+  dataPath: "path to your data folder",
+  dataPathSplitter: "\\", // "/" on linux
+  shouldBlurImages: true, // doesn't work, all images are blured
   protocol: "http://",
-  host: "127.0.0.1",
-  port: 23489,
-  hostport: 23489,
-
-  // DO NOT MODIFY \/
+  host: "192.168.0.135", // this is used for generating url in <a> tags in front end. if hosted on domain: example.domain.com
+  port: 3000, // delete if hosting on a domain
+  hostport: 3000, // port to host the server on
   url: function () {
-    return this.protocol + this.host + (this.port ? ":" + this.port : "");
+    return `${this.protocol}${this.host}${this.port ? `:${this.port}` : ""}`; // dont touch
   },
-  // DO NOT MODIFY /\
 
   authentication: {
-    permitted: ["<email_1>", "<email_2>"],
+    permitted: ["email1"],
     // Discord OAuth
     discord: {
+      enabled: true, // doesnt work, auth required
+      id: "app id",
+      secret: "app secret",
+    },
+  },
+  logs: {
+    discord: {
       enabled: true,
-      id: "<discord_id>",
-      secret: "<discord_secret>",
+      webhook:
+        "webhook url",
     },
   },
 
   // Appearance
-  fontAwesomeKit: "<fontawesome_kit_url>",
+  fontAwesomeKit: "https://kit.fontawesome.com/791ff69285.js",
   defaultTheme: "Dark",
   metaTitle: "WikiFS",
-  metaDescription: "My epic wikifs instance!",
+  metaDescription:
+    "A custom WikiFS instance.",
   metaEmbedColor: "#d40405",
-  logo: "/logo.png",
+  logo: "https://raw.githubusercontent.com/Pazdikan/Pazdikan.github.io/master/logo.png",
 };
