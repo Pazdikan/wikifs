@@ -1,6 +1,0 @@
-{
-  "ignore": [".ejs"],
-  "rules": {
-    "prettier/prettier": "error"
-  }
-}

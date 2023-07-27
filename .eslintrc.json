@@ -1,4 +1,16 @@
 {
-  "extends": "airbnb",
-  "linebreak-style": ["error", "windows"]
+  "extends": ["airbnb", "prettier"],
+  "plugins": ["prettier"],
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-console": "off",
+    "func-names": "off",
+    "no-process-exit": "off",
+    "object-shorthand": "off",
+    "class-methods-use-this": "off",
+    "global-require": "off",
+    "import/no-dynamic-require": "off",
+    "no-case-declarations": "off",
+    "no-param-reassign": "off"
+  }
 }
