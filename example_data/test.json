@@ -1,0 +1,14 @@
+{
+  "fileName": "test",
+  "meta": {
+    "title": "test",
+    "subtitle": "subtitle"
+  },
+  "infobox": {
+    "full_name": "aaaaaaaaaaa"
+  },
+  "content": {
+    "summary": "{{this is a test message|authenticity|0|an example of level 0 authenticity}}\n\n{{this is a second test message|authenticity|1|an example of level 1 authenticity}}\n\n{{this is a third test message|authenticity|2|an example of level 2 authenticity}}",
+    "full": "Loldd"
+  }
+}

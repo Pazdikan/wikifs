@@ -1,6 +1,6 @@
 module.exports = {
   // Important / Backend !!!
-  dataPath: "path to your data folder",
+  dataPath: "FULL path to your data folder (no ../ etc!!!)", // run pwd command in desired folder
   dataPathSplitter: "\\", // "/" on linux
   shouldBlurImages: true, // doesn't work, all images are blured
   protocol: "http://",
