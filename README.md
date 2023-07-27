@@ -1,6 +1,6 @@
 # WikiFS
 
-WikiFS is a private wiki software which focuses on but is not limited to storing information about real life stuff, mainly people, vehicles and locations in json files stored locally on the host machine.
+A private wiki software focusing on storing publicly available information (OSINT) in local JSON files.
 
 # Documentation
 
