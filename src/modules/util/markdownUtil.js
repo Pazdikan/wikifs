@@ -75,7 +75,6 @@ function convertToMarkdown(obj) {
   renderer.paragraph = (text) => text;
 
   Object.entries(rendered).forEach(([key, value]) => {
-    console.log(key, value);
     if (typeof value === "string") {
       let before = value;
       before = convertFileLinks(before);
