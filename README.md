@@ -1,5 +1,10 @@
 ![Banner](./.github/Banner.png)
 
+![GitHub](https://img.shields.io/github/license/pazdikan/wikifs?style=for-the-badge)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/pazdikan/wikifs?style=for-the-badge)
+![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/pazdikan/wikifs?style=for-the-badge)
+![GitHub Release Date - Published_At](https://img.shields.io/github/v/release/pazdikan/wikifs?style=for-the-badge)
+
 # Documentation
 
 [Hosted here](https://docs.pazdikan.party/en/wikifs/About)
