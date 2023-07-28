@@ -546,6 +546,7 @@ button {
 
 #loading {
   position: absolute;
+  pointer-events: none;
   width: 100%;
   height: 100%;
   background-color: #000;
@@ -558,10 +559,10 @@ button {
   display: inline-block;
   width: 80px;
   height: 80px;
-  position: absolute; /* Change 'relative' to 'absolute' */
+  position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* Center the spinner */
+  transform: translate(-50%, -50%);
 }
 
 .lds-dual-ring:after {
