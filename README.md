@@ -1,6 +1,4 @@
-# WikiFS
-
-A private wiki software focusing on storing publicly available information (OSINT) in local JSON files.
+![Banner](./.github/Banner.png)
 
 # Documentation
 
