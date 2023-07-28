@@ -1,4 +1,5 @@
 const marked = require("marked");
+
 const { calculateAge, calculateTimeAgo } = require("./mathUtil");
 const settings = require("../../settings");
 

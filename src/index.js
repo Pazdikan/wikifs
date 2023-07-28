@@ -1,19 +1,19 @@
+const { gfmHeadingId } = require("marked-gfm-heading-id");
+const session = require("express-session");
+const { randomBytes } = require("crypto");
 const { marked } = require("marked");
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
-const { gfmHeadingId } = require("marked-gfm-heading-id");
-const session = require("express-session");
-const { randomBytes } = require("crypto");
-const settings = require("./settings");
 
-const log = require("./modules/logger/logger");
+const { convertToMarkdown } = require("./modules/util/markdownUtil");
 const {
   scanForFiles,
   findFile,
   scanForImages,
 } = require("./modules/util/fileUtil");
-const { convertToMarkdown } = require("./modules/util/markdownUtil");
+const settings = require("./settings");
+const log = require("./modules/logger/logger");
 
 const app = express();
 

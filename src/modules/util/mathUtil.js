@@ -11,7 +11,7 @@ function calculateAge(dateOfBirth) {
   const monthDiff = today.getMonth() - dob.getMonth();
 
   if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-    age--;
+    age -= 1;
   }
 
   return age;
