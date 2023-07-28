@@ -139,6 +139,9 @@ galleryTabs.forEach((tab, index) => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("loading").style.opacity = "0";
+  document.getElementsByTagName("body")[0].style.overflowY = "scroll";
+
   const htmlTag = document.getElementsByTagName("html")[0];
   document.querySelectorAll(".theme-switch-item").forEach((item) => {
     item.addEventListener("click", () => {
