@@ -1,7 +1,7 @@
 {
-  "name": "dbfs",
+  "name": "wikifs",
   "version": "1.0.0",
-  "description": "A DataBase For Stalkers",
+  "description": "A private wiki software focusing on storing publicly available information (OSINT) in local JSON files.",
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon app.js"
