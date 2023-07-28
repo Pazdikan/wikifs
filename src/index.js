@@ -30,6 +30,9 @@ app.use(
     secret: randomBytes(32).toString("hex"),
     resave: false,
     saveUninitialized: true,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+    },
   })
 );
 
