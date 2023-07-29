@@ -99,6 +99,19 @@ function convertToMarkdown(obj) {
             return `${match} <small>(${timeAgo})</small>`;
           });
           break;
+        case "home":
+          const addressRegex = /((?:\w+ )+\d+,\s[\w\s]+(?:\s<[^>]+>)?)/g;
+          const googleMapsUrl =
+            "https://www.google.com/maps/search/?api=1&query=";
+
+          before = before.replace(
+            addressRegex,
+            (match, address) =>
+              `<a href="${googleMapsUrl}${encodeURIComponent(
+                address
+              )}">${match}</a>`
+          );
+          break;
         default:
           break;
       }
