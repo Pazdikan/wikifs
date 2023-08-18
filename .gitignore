@@ -1,7 +1,8 @@
 # Custom
-data/*
+data
 TODO.md
 src/settings.js
+.clinic
 
 # Logs
 logs
