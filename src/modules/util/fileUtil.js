@@ -87,8 +87,21 @@ function findFile(fileName, arrayOfPaths) {
   return toReturn;
 }
 
+function loadEntries() {
+  const response = {};
+
+  const files = scanForFiles(settings.dataPath, ".json");
+  files.forEach((file) => {
+    const fileName = file.split(settings.dataPathSplitter).pop().split(".")[0];
+    response[fileName] = require(file);
+  });
+
+  return response;
+}
+
 module.exports = {
   scanForFiles,
   scanForImages,
   findFile,
+  loadEntries,
 };

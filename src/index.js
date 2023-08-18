@@ -11,9 +11,14 @@ const {
   scanForFiles,
   findFile,
   scanForImages,
+  loadEntries,
 } = require("./modules/util/fileUtil");
 const settings = require("./settings");
 const log = require("./modules/logger/logger");
+
+log.info("Loading entries...");
+
+const entries = loadEntries();
 
 const app = express();
 
@@ -113,6 +118,8 @@ app.post("/wiki/:file", (req, res) => {
 
   fs.writeFileSync(foundFile, JSON.stringify(body, null, 2));
 
+  entries[file] = body;
+
   return res.status(200).json({
     status: "OK",
   });
@@ -120,23 +127,18 @@ app.post("/wiki/:file", (req, res) => {
 
 app.get("/wiki/:file/edit", (req, res) => {
   const { file } = req.params;
-  let found = [];
   const foundImages = {};
   const foundInfoboxImages = {};
 
-  found = scanForFiles(settings.dataPath, ".json");
+  const foundEntry = entries[file];
 
-  const foundFile = findFile(file, found);
-
-  if (foundFile === "") {
+  if (!foundEntry) {
     res.render("404", {
       fileName: file,
       settings,
     });
     return;
   }
-
-  const foundObject = require(foundFile);
 
   if (fs.existsSync(path.join(settings.dataPath, "images", file, "main"))) {
     scanForImages(
@@ -151,28 +153,23 @@ app.get("/wiki/:file/edit", (req, res) => {
 
   res.render("edit_wikipage", {
     settings,
-    file: foundObject,
+    file: foundEntry,
     fileName: file,
     infoboxImages: foundInfoboxImages,
     images: foundImages,
 
     infoboxtemplate: require(path.join(__dirname, "infobox.json")),
   });
-
-  delete require.cache[require.resolve(foundFile)];
 });
 
 app.get("/wiki/:file", (req, res) => {
   const { file } = req.params;
-  let found = [];
   const foundImages = {};
   const foundInfoboxImages = {};
 
-  found = scanForFiles(settings.dataPath, ".json");
+  const foundEntry = entries[file];
 
-  const foundFile = findFile(file, found);
-
-  if (foundFile === "") {
+  if (!foundEntry) {
     res.render("404", {
       fileName: file,
       settings,
@@ -180,8 +177,7 @@ app.get("/wiki/:file", (req, res) => {
     return;
   }
 
-  const foundObject = require(foundFile);
-  const rendered = convertToMarkdown(foundObject);
+  const rendered = convertToMarkdown(foundEntry);
 
   if (fs.existsSync(path.join(settings.dataPath, "images", file, "main"))) {
     scanForImages(
@@ -203,20 +199,15 @@ app.get("/wiki/:file", (req, res) => {
 
     infoboxtemplate: require(path.join(__dirname, "infobox.json")),
   });
-
-  delete require.cache[require.resolve(foundFile)];
 });
 
 app.delete("/wiki/:file/image/:image", (req, res) => {
   const { file, image } = req.params;
-  let found = [];
   let foundInfoboxImage = {};
 
-  found = scanForFiles(settings.dataPath, ".json");
+  const foundEntry = entries[file];
 
-  const foundFile = findFile(file, found);
-
-  if (foundFile === "") {
+  if (!foundEntry) {
     res.status(404).send({
       status: `NOTE "${file}" NOT FOUND`,
     });
@@ -292,5 +283,5 @@ app.get("*", (req, res) => {
 });
 
 app.listen(settings.hostport, () => {
-  log.info(`App listening on ${settings.url()}`);
+  log.info(`Done! App listening on ${settings.url()}`);
 });
