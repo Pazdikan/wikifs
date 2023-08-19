@@ -34,7 +34,7 @@ const simulation = d3
       .id((d) => d.id)
       .distance(25)
   )
-  .force("charge", d3.forceManyBody().strength(-50))
+  .force("charge", d3.forceManyBody().strength(-10))
   .force("center", d3.forceCenter(centerX, centerY));
 
 const contentGroup = svg.append("g");
@@ -57,7 +57,7 @@ const nodeGroup = contentGroup
   .call(drag(simulation))
   .attr("class", "node-group");
 
-nodeGroup.append("circle").attr("r", 5).attr("fill", "blue");
+nodeGroup.append("circle").attr("r", 5).attr("fill", "var(--accent)");
 
 // Create tooltips using Tippy.js
 nodeGroup.each(function (d) {
@@ -70,7 +70,6 @@ nodeGroup.each(function (d) {
 // Initialize the zoom behavior
 const zoom = d3.zoom().on("zoom", (event) => {
   contentGroup.attr("transform", event.transform);
-  simulation.alpha(0.3).restart(); // Restart the simulation when zooming
 });
 
 // Apply the zoom behavior to the SVG
