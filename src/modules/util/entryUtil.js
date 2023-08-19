@@ -32,6 +32,8 @@ function loadEntries() {
     const fileName = file.split(settings.dataPathSplitter).pop().split(".")[0];
 
     const entry = require(file);
+    delete require.cache[require.resolve(file)];
+
     const links = getLinks(entry);
 
     // For each link in the entry, update the backlinks object

@@ -16,7 +16,7 @@ const log = require("./modules/logger/logger");
 
 log.info("Loading entries...");
 
-let entries = loadEntries();
+const entries = loadEntries();
 
 const app = express();
 
@@ -128,7 +128,10 @@ app.get("/wiki/:file/edit", (req, res) => {
 
   const foundEntry = entries[file];
 
-  if (!foundEntry) {
+  if (
+    !foundEntry ||
+    (Object.keys(foundEntry).length === 1 && "backlinks" in foundEntry.meta)
+  ) {
     res.render("404", {
       fileName: file,
       settings,
@@ -165,7 +168,10 @@ app.get("/wiki/:file", (req, res) => {
 
   const foundEntry = entries[file];
 
-  if (!foundEntry) {
+  if (
+    !foundEntry ||
+    (Object.keys(foundEntry).length === 1 && "backlinks" in foundEntry.meta)
+  ) {
     res.render("404", {
       fileName: file,
       settings,
@@ -270,11 +276,9 @@ app.post("/wiki/:file/image/:image", (req, res) => {
 });
 
 app.get("/graph", (req, res) => {
-  entries = loadEntries();
-
   res.render("graph", {
     settings,
-    entries,
+    entries: loadEntries(),
   });
 });
 
