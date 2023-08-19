@@ -53,6 +53,10 @@ function loadEntries() {
   });
 
   Object.keys(backlinks).forEach((fileName) => {
+    if (!response[fileName]) {
+      response[fileName] = {};
+    }
+
     response[fileName].meta = {
       ...(response[fileName].meta || {}),
       backlinks: backlinks[fileName],
