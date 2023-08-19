@@ -1,7 +1,9 @@
 const marked = require("marked");
-
+const { gfmHeadingId } = require("marked-gfm-heading-id");
 const { calculateAge, calculateTimeAgo } = require("./mathUtil");
 const settings = require("../../settings");
+
+marked.use(gfmHeadingId());
 
 /**
  * Replaces file links in the given text with HTML anchor tags.

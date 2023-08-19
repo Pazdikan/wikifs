@@ -1,5 +1,6 @@
 const { scanForFiles } = require("./fileUtil");
 const settings = require("../../settings");
+const { convertToMarkdown } = require("./markdownUtil");
 
 function extractLinks(text) {
   const regex = /\[\[(.*?)\]\]/g;
@@ -32,6 +33,8 @@ function loadEntries() {
 
     const entry = require(file);
     const links = getLinks(entry);
+
+    convertToMarkdown(entry);
 
     // For each link in the entry, update the backlinks object
     links.forEach((link) => {

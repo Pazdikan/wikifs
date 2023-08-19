@@ -1,12 +1,9 @@
-const { gfmHeadingId } = require("marked-gfm-heading-id");
 const session = require("express-session");
 const { randomBytes } = require("crypto");
-const { marked } = require("marked");
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
 
-const { convertToMarkdown } = require("./modules/util/markdownUtil");
 const { loadEntries } = require("./modules/util/entryUtil");
 const {
   scanForFiles,
@@ -21,8 +18,6 @@ log.info("Loading entries...");
 const entries = loadEntries();
 
 const app = express();
-
-marked.use(gfmHeadingId());
 
 app.set("view engine", "pug");
 app.set("views", `${__dirname}/views`);
@@ -177,8 +172,6 @@ app.get("/wiki/:file", (req, res) => {
     return;
   }
 
-  const rendered = convertToMarkdown(foundEntry);
-
   if (fs.existsSync(path.join(settings.dataPath, "images", file, "main"))) {
     scanForImages(
       path.join(settings.dataPath, "images", file, "main"),
@@ -192,7 +185,7 @@ app.get("/wiki/:file", (req, res) => {
 
   res.render("wikipage", {
     settings,
-    file: rendered,
+    file: foundEntry,
     fileName: file,
     infoboxImages: foundInfoboxImages,
     images: foundImages,
