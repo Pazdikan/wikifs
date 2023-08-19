@@ -10,12 +10,13 @@ const {
   findFile,
   scanForImages,
 } = require("./modules/util/fileUtil");
+const { convertToMarkdown } = require("./modules/util/markdownUtil");
 const settings = require("./settings");
 const log = require("./modules/logger/logger");
 
 log.info("Loading entries...");
 
-const entries = loadEntries();
+let entries = loadEntries();
 
 const app = express();
 
@@ -185,7 +186,7 @@ app.get("/wiki/:file", (req, res) => {
 
   res.render("wikipage", {
     settings,
-    file: foundEntry,
+    file: convertToMarkdown(foundEntry),
     fileName: file,
     infoboxImages: foundInfoboxImages,
     images: foundImages,
@@ -269,6 +270,8 @@ app.post("/wiki/:file/image/:image", (req, res) => {
 });
 
 app.get("/graph", (req, res) => {
+  entries = loadEntries();
+
   res.render("graph", {
     settings,
     entries,

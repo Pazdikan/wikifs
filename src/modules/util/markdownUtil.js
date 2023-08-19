@@ -1,5 +1,7 @@
 const marked = require("marked");
 const { gfmHeadingId } = require("marked-gfm-heading-id");
+const lodash = require("lodash");
+
 const { calculateAge, calculateTimeAgo } = require("./mathUtil");
 const settings = require("../../settings");
 
@@ -73,7 +75,7 @@ function handleCustomStuff(text) {
  * @param {object} obj - The object to be converted to markdown.
  */
 function convertToMarkdown(obj) {
-  const rendered = obj;
+  const rendered = lodash.cloneDeep(obj);
   const renderer = new marked.Renderer();
   renderer.paragraph = (text) => text;
 
