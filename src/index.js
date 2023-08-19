@@ -7,11 +7,11 @@ const path = require("path");
 const fs = require("fs");
 
 const { convertToMarkdown } = require("./modules/util/markdownUtil");
+const { loadEntries } = require("./modules/util/entryUtil");
 const {
   scanForFiles,
   findFile,
   scanForImages,
-  loadEntries,
 } = require("./modules/util/fileUtil");
 const settings = require("./settings");
 const log = require("./modules/logger/logger");
@@ -273,6 +273,13 @@ app.post("/wiki/:file/image/:image", (req, res) => {
   if (!res.headersSent) {
     res.status(200).send({ status: "OK" });
   }
+});
+
+app.get("/graph", (req, res) => {
+  res.render("graph", {
+    settings,
+    entries,
+  });
 });
 
 // 404 for all other routes

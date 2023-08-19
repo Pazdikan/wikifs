@@ -68,6 +68,14 @@ body {
     sans-serif;
 }
 
+.title {
+  color: var(--text);
+  font-size: 32px;
+  margin-top: 100px;
+  font-weight: 700;
+  text-align: center;
+}
+
 /* Infobox */
 
 .infobox {
@@ -438,6 +446,11 @@ textarea {
   .shitpostimg {
     width: 90vw !important;
   }
+
+  #graph {
+    width: 90vw !important;
+    height: 70vh !important;
+  }
 }
 
 .small-screen-warning {
@@ -583,4 +596,23 @@ button {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.graph-container {
+  margin: 0 auto;
+  text-align: center;
+}
+
+#graph {
+  width: 75vw;
+  height: 75vh;
+  cursor: grab;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  margin-top: 25px;
+}
+
+#graph:active {
+  cursor: grabbing;
 }
