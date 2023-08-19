@@ -20,11 +20,13 @@ nav.navbar.navbar-expand-lg.bg-body-tertiary.navbar-dark
               a.dropdown-item.theme-switch-item(href='#') Cyberpunk 2077
 
         a.nav-link(href=`${settings['url']()}/new`) New entry
-        a.nav-link(href='https://docs.pazdikan.party/en/wikifs/About') Docs
+        a.nav-link(href=`${settings['url']()}/graph`) Graph
 
       form.d-flex(role='search')
         input.form-control.me-2(type='search', placeholder='Search', aria-label='Search')
         button.btn.btn-outline-success(type='submit') Search
+
+      
 
 #loading
   .lds-dual-ring

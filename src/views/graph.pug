@@ -1,0 +1,19 @@
+doctype html
+html(lang="en")
+  head
+    title Home
+    include head.pug
+    link(rel="stylesheet", href="/css/style.css")
+  body
+    include header.pug
+        settings
+
+    h3.title You have !{Object.keys(entries).length} entries
+
+    div.graph-container
+        svg#graph(width="800" height="600")
+
+    script(src="https://d3js.org/d3.v7.min.js")
+    script.
+        entries = !{JSON.stringify(entries)}
+    script(src="/js/graph.js")
