@@ -16,7 +16,7 @@ const log = require("./modules/logger/logger");
 
 log.info("Loading entries...");
 
-const entries = loadEntries();
+let entries = loadEntries();
 
 const app = express();
 
@@ -107,6 +107,7 @@ app.post("/wiki/:file", (req, res) => {
       path.join(settings.dataPath, `${file}.json`),
       JSON.stringify(body, null, 2)
     );
+    entries = loadEntries();
     return res.status(200).json({
       status: "OK",
     });
@@ -114,7 +115,7 @@ app.post("/wiki/:file", (req, res) => {
 
   fs.writeFileSync(foundFile, JSON.stringify(body, null, 2));
 
-  entries[file] = body;
+  entries = loadEntries();
 
   return res.status(200).json({
     status: "OK",
