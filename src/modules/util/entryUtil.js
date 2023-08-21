@@ -1,7 +1,12 @@
 const { scanForFiles } = require("./fileUtil");
 const settings = require("../../settings");
-const { convertToMarkdown } = require("./markdownUtil");
 
+/**
+ * Extracts links from a given text.
+ *
+ * @param {string} text - The text to search for links.
+ * @return {Array} An array containing the extracted links.
+ */
 function extractLinks(text) {
   const regex = /\[\[(.*?)\]\]/g;
   const matches = text.match(regex);
@@ -23,6 +28,11 @@ function getLinks(entry) {
   return extractLinks(JSON.stringify(entry));
 }
 
+/**
+ * Loads entries from files and generates a response object with backlinks.
+ *
+ * @return {Object} The response object containing the loaded entries and their backlinks.
+ */
 function loadEntries() {
   const response = {};
   const backlinks = {};
