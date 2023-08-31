@@ -283,6 +283,41 @@ app.get("/graph", (req, res) => {
   });
 });
 
+app.get("/search", (req, res) => {
+  const query = req.query.q;
+
+  const found = Object.entries(entries).filter(([key, value]) => {
+    console.log("🚀 ~ file: index.js:290 ~ found ~ value:", value);
+    if (value.meta && value.meta.title) {
+      if (value.meta.title.toLowerCase().includes(query.toLowerCase())) {
+        return true;
+      }
+    }
+
+    if (value.meta && value.meta.subtitle) {
+      if (value.meta.subtitle.toLowerCase().includes(query.toLowerCase())) {
+        return true;
+      }
+    }
+
+    return false;
+  });
+
+  if (found.length === 0) {
+    res.render("404", {
+      settings,
+    });
+    return;
+  }
+
+  const result = Object.fromEntries(found);
+
+  res.render("home", {
+    settings,
+    pages: result,
+  });
+});
+
 // 404 for all other routes
 app.get("*", (req, res) => {
   res.render("404", {

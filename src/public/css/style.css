@@ -56,6 +56,9 @@ body {
 .navbar {
   margin: -2.5vw;
   background: var(--background) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .container {
@@ -613,4 +616,12 @@ button {
 
 #graph:active {
   cursor: grabbing;
+}
+
+.header-search {
+  display: flex;
+  align-items: center; /* Vertically center content */
+  justify-content: center; /* Horizontally center content */
+  height: fit-content;
+  margin-top: 10px; /* Add some top margin for spacing */
 }
