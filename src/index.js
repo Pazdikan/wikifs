@@ -107,15 +107,13 @@ app.post("/wiki/:file", (req, res) => {
       path.join(settings.dataPath, `${file}.json`),
       JSON.stringify(body, null, 2)
     );
-    entries = loadEntries();
+
     return res.status(200).json({
       status: "OK",
     });
   }
 
   fs.writeFileSync(foundFile, JSON.stringify(body, null, 2));
-
-  entries = loadEntries();
 
   return res.status(200).json({
     status: "OK",
@@ -166,6 +164,8 @@ app.get("/wiki/:file", (req, res) => {
   const { file } = req.params;
   const foundImages = {};
   const foundInfoboxImages = {};
+
+  entries = loadEntries();
 
   const foundEntry = entries[file];
 
