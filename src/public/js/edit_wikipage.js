@@ -93,24 +93,23 @@ document.getElementById("manage_images").addEventListener("click", () => {
 
         // Iterate through the uploaded photos and create an HTML element for each photo
 
-        for (const photo in uploadedPhotos) {
-          if (Object.hasOwnProperty.call(uploadedPhotos, photo)) {
-            const image = uploadedPhotos[photo];
-            const photoElement = document.createElement("div");
-            photoElement.textContent = photo;
+        uploadedPhotos.forEach((photo) => {
+          let photoID = Object.keys(photo)[0];
 
-            // Add a delete button for each photo
-            const deleteButton = document.createElement("button");
-            deleteButton.textContent = "Delete";
-            deleteButton.addEventListener("click", () => {
-              // Call a function to delete the photo
-              deletePhoto(photo);
-            });
+          const photoElement = document.createElement("div");
+          photoElement.textContent = photoID;
 
-            photoElement.appendChild(deleteButton);
-            uploadedPhotosContainer.appendChild(photoElement);
-          }
-        }
+          // Add a delete button for each photo
+          const deleteButton = document.createElement("button");
+          deleteButton.textContent = "Delete";
+          deleteButton.addEventListener("click", () => {
+            // Call a function to delete the photo
+            deletePhoto(photoID);
+          });
+
+          photoElement.appendChild(deleteButton);
+          uploadedPhotosContainer.appendChild(photoElement);
+        });
 
         const fileSelector = document.createElement("input");
         fileSelector.type = "file";

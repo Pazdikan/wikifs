@@ -30,13 +30,13 @@ html(lang="en")
                     .infobox-gallery.swing-in-top-fwd
                         .gallery-tabs
                             - let index = 0;
-                            each value, key in infoboxImages
-                                .gallery-tab(class=(index === 0 ? 'active' : ''))=key
+                            each object in infoboxImages
+                                .gallery-tab(class=(index === 0 ? 'active' : ''))=Object.keys(object)[0]
                                 - index++
                                 
                         - index = 0
-                        each value, key in infoboxImages
-                            img.infobox-img(class=(index === 0 ? 'active' : ''), src=value, alt=key)
+                        each object in infoboxImages
+                            img.infobox-img(class=(index === 0 ? 'active' : ''), src=Object.values(object)[0], alt=Object.keys(object)[0])
                             - index++
                     each fields, category in infoboxtemplate
                             .infobox-group

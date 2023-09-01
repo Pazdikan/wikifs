@@ -14,6 +14,29 @@ const { convertToMarkdown } = require("./modules/util/markdownUtil");
 const settings = require("./settings");
 const log = require("./modules/logger/logger");
 
+function sortImages(obj) {
+  let keys = Object.keys(obj);
+
+  keys = keys.filter((key) => !isNaN(key));
+
+  // the entire keys array is an array of numbers inside strings. set it to array of numbers
+  keys = keys.map((key) => {
+    return parseInt(key);
+  });
+
+  // sort the array descending
+  keys.sort((a, b) => {
+    return b - a;
+  });
+
+  const sorted = [];
+  keys.forEach((key) => {
+    sorted.push({ [key.toString()]: obj[key.toString()] });
+  });
+
+  return sorted;
+}
+
 log.info("Loading entries...");
 
 let entries = loadEntries();
@@ -153,8 +176,8 @@ app.get("/wiki/:file/edit", (req, res) => {
     settings,
     file: foundEntry,
     fileName: file,
-    infoboxImages: foundInfoboxImages,
-    images: foundImages,
+    infoboxImages: sortImages(foundInfoboxImages),
+    images: sortImages(foundImages),
 
     infoboxtemplate: require(path.join(__dirname, "infobox.json")),
   });
@@ -195,8 +218,8 @@ app.get("/wiki/:file", (req, res) => {
     settings,
     file: convertToMarkdown(foundEntry),
     fileName: file,
-    infoboxImages: foundInfoboxImages,
-    images: foundImages,
+    infoboxImages: sortImages(foundInfoboxImages),
+    images: sortImages(foundImages),
 
     infoboxtemplate: require(path.join(__dirname, "infobox.json")),
   });
