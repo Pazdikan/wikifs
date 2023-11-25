@@ -19,6 +19,7 @@
     "lodash": "^4.17.21",
     "marked": "^5.1.1",
     "marked-gfm-heading-id": "^3.0.4",
+    "moment": "^2.29.4",
     "node-fetch": "^3.3.1",
     "pug": "^3.0.2",
     "winston": "^3.10.0"

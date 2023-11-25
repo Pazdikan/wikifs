@@ -4,38 +4,16 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 
-const { loadEntries } = require("./modules/util/entryUtil");
+const { loadEntries, getBirthdays } = require("./modules/util/entryUtil");
 const {
   scanForFiles,
   findFile,
+  sortImages,
   scanForImages,
 } = require("./modules/util/fileUtil");
 const { convertToMarkdown } = require("./modules/util/markdownUtil");
 const settings = require("./settings");
 const log = require("./modules/logger/logger");
-
-function sortImages(obj) {
-  let keys = Object.keys(obj);
-
-  keys = keys.filter((key) => !isNaN(key));
-
-  // the entire keys array is an array of numbers inside strings. set it to array of numbers
-  keys = keys.map((key) => {
-    return parseInt(key);
-  });
-
-  // sort the array descending
-  keys.sort((a, b) => {
-    return b - a;
-  });
-
-  const sorted = [];
-  keys.forEach((key) => {
-    sorted.push({ [key.toString()]: obj[key.toString()] });
-  });
-
-  return sorted;
-}
 
 log.info("Loading entries...");
 
@@ -62,16 +40,16 @@ app.use(
 
 app.use(`/api/auth`, require("./modules/auth/discord"));
 
-app.use((req, res, next) => {
-  if (!req.url.includes("api") && !req.session.user) {
-    req.session.redirectTo = req.originalUrl;
-    return res.render("login", {
-      settings,
-    });
-  }
+// app.use((req, res, next) => {
+//   if (!req.url.includes("api") && !req.session.user) {
+//     req.session.redirectTo = req.originalUrl;
+//     return res.render("login", {
+//       settings,
+//     });
+//   }
 
-  return next();
-});
+//   return next();
+// });
 
 app.use((req, res, next) => {
   if (!req.url.includes(".js") && !req.url.includes(".css")) {
@@ -93,6 +71,7 @@ app.get("/", (req, res) => {
   res.render("home", {
     settings,
     pages,
+    birthdays: getBirthdays(),
   });
 });
 
@@ -213,6 +192,11 @@ app.get("/wiki/:file", (req, res) => {
   if (fs.existsSync(path.join(settings.dataPath, "images", file))) {
     scanForImages(path.join(settings.dataPath, "images", file), foundImages);
   }
+
+  console.log(
+    '🚀 ~ file: index.js:193 ~ app.get ~ fs.existsSync(path.join(settings.dataPath, "images", file)):',
+    sortImages(foundInfoboxImages)
+  );
 
   res.render("wikipage", {
     settings,
@@ -340,6 +324,8 @@ app.get("/search", (req, res) => {
     pages: result,
   });
 });
+
+getBirthdays();
 
 // 404 for all other routes
 app.get("*", (req, res) => {

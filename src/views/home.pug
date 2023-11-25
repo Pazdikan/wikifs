@@ -12,6 +12,8 @@ html(lang="en")
 
     .center-home
       .alert.alert-warning.small-screen-warning(role="alert") Zoom out if the table is off screen!
+      h1 Upcoming birthdays
+      #birthdays
       h1 Home - List of files
       #table
 
@@ -19,4 +21,4 @@ script(src="/js/home.js")
 
 script.
     generateTable(!{JSON.stringify(pages)}, !{JSON.stringify(settings)}, "!{settings['url']()}")
-
+    displayBirthdays(!{JSON.stringify(birthdays)})

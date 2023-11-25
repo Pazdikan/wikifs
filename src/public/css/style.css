@@ -386,74 +386,6 @@ textarea {
   text-align: center;
 }
 
-/* mobile */
-@media (max-width: 768px) {
-  .infobox {
-    max-width: 100%;
-    width: 5000px;
-    margin-bottom: 20px;
-  }
-
-  .order-md-first {
-    order: 1;
-  }
-
-  .sticky {
-    position: relative !important;
-    top: 0;
-  }
-
-  .infobox .heading h2 {
-    font-size: 18px;
-  }
-
-  .infobox .heading h1 {
-    font-size: 16px;
-  }
-
-  #toc {
-    display: none;
-  }
-
-  .order-md-first {
-    margin-top: 50px;
-  }
-
-  .content-col {
-    font-size: 12px;
-  }
-
-  #table {
-    font-size: 10px;
-  }
-
-  .small-screen-warning {
-    display: block;
-  }
-
-  .infobox-datarow .data-heading {
-    width: 30%;
-    font-weight: 500;
-  }
-
-  .data-content {
-    max-width: 75%;
-  }
-
-  .shitpost {
-    width: 90vw;
-  }
-
-  .shitpostimg {
-    width: 90vw !important;
-  }
-
-  #graph {
-    width: 90vw !important;
-    height: 70vh !important;
-  }
-}
-
 .small-screen-warning {
   display: none;
 }
@@ -624,4 +556,108 @@ button {
   justify-content: center; /* Horizontally center content */
   height: fit-content;
   margin-top: 10px; /* Add some top margin for spacing */
+}
+
+#birthdays {
+  max-height: 150px;
+  margin: 30px auto;
+  overflow: auto;
+  white-space: nowrap; /* Prevents panels from wrapping to the next line */
+}
+
+.home-panel {
+  background: var(--transparent);
+  padding: 25px;
+  width: 300px;
+  height: 100px;
+  border-radius: 10px;
+  display: inline-block;
+  margin: 10px;
+}
+
+/* WebKit-based browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--background);
+}
+
+/* mobile */
+@media (max-width: 768px) {
+  .home-panel {
+    width: 75%;
+  }
+
+  .infobox {
+    max-width: 100%;
+    width: 5000px;
+    margin-bottom: 20px;
+  }
+
+  .order-md-first {
+    order: 1;
+  }
+
+  .sticky {
+    position: relative !important;
+    top: 0;
+  }
+
+  .infobox .heading h2 {
+    font-size: 18px;
+  }
+
+  .infobox .heading h1 {
+    font-size: 16px;
+  }
+
+  #toc {
+    display: none;
+  }
+
+  .order-md-first {
+    margin-top: 50px;
+  }
+
+  .content-col {
+    font-size: 12px;
+  }
+
+  #table {
+    font-size: 10px;
+  }
+
+  .small-screen-warning {
+    display: block;
+  }
+
+  .infobox-datarow .data-heading {
+    width: 30%;
+    font-weight: 500;
+  }
+
+  .data-content {
+    max-width: 75%;
+  }
+
+  .shitpost {
+    width: 90vw;
+  }
+
+  .shitpostimg {
+    width: 90vw !important;
+  }
+
+  #graph {
+    width: 90vw !important;
+    height: 70vh !important;
+  }
 }

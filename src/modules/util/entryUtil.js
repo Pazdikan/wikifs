@@ -1,5 +1,6 @@
 const { scanForFiles } = require("./fileUtil");
 const settings = require("../../settings");
+const moment = require("moment");
 
 /**
  * Extracts links from a given text.
@@ -76,7 +77,63 @@ function loadEntries() {
   return response;
 }
 
+function getBirthdays() {
+  const response = {};
+  const entries = loadEntries();
+  const upcomingBirthdays = [];
+
+  function isToday(date_of_birth) {
+    const today = moment();
+
+    return moment(date_of_birth).year(today.year()).diff(today, "days") == 0;
+  }
+
+  function isThisYear(date_of_birth) {
+    const today = moment();
+
+    return moment(date_of_birth).year(today.year()).diff(today, "days") > 0;
+  }
+
+  for (const key in entries) {
+    if (Object.hasOwnProperty.call(entries, key)) {
+      const entry = entries[key];
+      const birthdayMoment = moment(entry.infobox.date_of_birth).year(
+        isThisYear(entry.infobox.date_of_birth)
+          ? moment().year()
+          : moment().year() + 1
+      );
+      const upcomingBirthday = {
+        key,
+        birthday: birthdayMoment.toDate(),
+        age: isToday(birthdayMoment)
+          ? parseInt(
+              moment().diff(moment(entry.infobox.date_of_birth), "years")
+            )
+          : moment().diff(moment(entry.infobox.date_of_birth), "years") + 1,
+        isToday: isToday(birthdayMoment),
+        isThisYear: isThisYear(entry.infobox.date_of_birth),
+      };
+      upcomingBirthdays.push(upcomingBirthday);
+    }
+  }
+
+  upcomingBirthdays.sort((a, b) => a.birthday - b.birthday);
+
+  upcomingBirthdays.forEach((birthday) => {
+    response[birthday.key] = `${
+      birthday.isToday
+        ? "TODAY!"
+        : `${moment(birthday.birthday).format("MMMM D")} (${moment(
+            birthday.birthday
+          ).fromNow()})`
+    }`;
+  });
+
+  return response;
+}
+
 module.exports = {
   getLinks,
   loadEntries,
+  getBirthdays,
 };

@@ -64,3 +64,30 @@ function generateTable(pages, settings, url) {
     ],
   });
 }
+
+function displayBirthdays(birthdays) {
+  let panels = [];
+
+  for (const name in birthdays) {
+    if (Object.hasOwnProperty.call(birthdays, name)) {
+      const birthday = birthdays[name];
+
+      let panel = document.createElement("div");
+      panel.classList.add("home-panel");
+
+      let panelTitle = document.createElement("h5");
+      panelTitle.textContent = name;
+      panel.appendChild(panelTitle);
+
+      let panelDescription = document.createElement("p");
+      panelDescription.textContent = birthday;
+      panel.appendChild(panelDescription);
+
+      panels.push(panel);
+    }
+  }
+
+  panels.forEach((panel) => {
+    document.getElementById("birthdays").appendChild(panel);
+  });
+}

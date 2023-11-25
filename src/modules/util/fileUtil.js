@@ -63,6 +63,45 @@ function scanForImages(directory, jsonData) {
 }
 
 /**
+ * Sorts an object of images based on numeric keys in descending order.
+ *
+ * @param {Object} obj - The object containing images with numeric keys.
+ * @returns {Array} An array of objects representing the sorted images.
+ */
+function sortImages(obj) {
+  let keys = Object.keys(obj);
+  let strings = [];
+  let numbers = [];
+
+  keys.forEach((key) => {
+    if (!isNaN(key)) {
+      numbers.push(key);
+    } else {
+      strings.push(key);
+    }
+  });
+
+  numbers = numbers.map((key) => {
+    return parseInt(key);
+  });
+
+  numbers.sort((a, b) => {
+    return b - a;
+  });
+
+  const sorted = [];
+  numbers.forEach((key) => {
+    sorted.push({ [key.toString()]: obj[key.toString()] });
+  });
+
+  strings.forEach((key) => {
+    sorted.push({ [key.toString()]: obj[key.toString()] });
+  });
+
+  return sorted;
+}
+
+/**
  * Finds a file with the specified name in an array of paths.
  *
  * @param {string} fileName - The name of the file to find.
@@ -91,4 +130,5 @@ module.exports = {
   scanForFiles,
   scanForImages,
   findFile,
+  sortImages,
 };

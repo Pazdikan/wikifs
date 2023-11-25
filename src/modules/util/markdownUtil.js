@@ -1,8 +1,9 @@
 const marked = require("marked");
 const { gfmHeadingId } = require("marked-gfm-heading-id");
 const lodash = require("lodash");
+const moment = require("moment");
 
-const { calculateAge, calculateTimeAgo } = require("./mathUtil");
+const { calculateAge } = require("./mathUtil");
 const settings = require("../../settings");
 
 marked.use(gfmHeadingId());
@@ -85,22 +86,30 @@ function convertToMarkdown(obj) {
       before = convertFileLinks(before);
       before = handleCustomStuff(before);
 
-      const dateRegex =
-        /(\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s\d{1,2},\s\d{4}\b)/g;
+      const dateFormats = [
+        /\b\d{4}-\d{2}-\d{2}\b/g,
+        /\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s\d{1,2},\s\d{4}\b/g,
+      ];
 
       switch (key) {
         case "date_of_birth":
-          before = before.replace(dateRegex, (match) => {
-            const age = calculateAge(match);
-            return `${match} <small>(age ${age})</small>`;
+          dateFormats.forEach((dateRegex) => {
+            before = before.replace(dateRegex, (match) => {
+              const formattedDate = moment(match).format("YYYY-MM-DD");
+              const age = calculateAge(match);
+              return `${formattedDate} <small>(age ${age})</small>`;
+            });
           });
           break;
         case "date_of_death":
           break;
         case "first_met":
-          before = before.replace(dateRegex, (match) => {
-            const timeAgo = calculateTimeAgo(match);
-            return `${match} <small>(${timeAgo})</small>`;
+          dateFormats.forEach((dateRegex) => {
+            before = before.replace(dateRegex, (match) => {
+              const formattedDate = moment(match).format("YYYY-MM-DD");
+              const timeAgo = moment(match).fromNow();
+              return `${formattedDate} <small>(${timeAgo})</small>`;
+            });
           });
           break;
         case "home":
