@@ -40,16 +40,16 @@ app.use(
 
 app.use(`/api/auth`, require("./modules/auth/discord"));
 
-// app.use((req, res, next) => {
-//   if (!req.url.includes("api") && !req.session.user) {
-//     req.session.redirectTo = req.originalUrl;
-//     return res.render("login", {
-//       settings,
-//     });
-//   }
+app.use((req, res, next) => {
+  if (!req.url.includes("api") && !req.session.user) {
+    req.session.redirectTo = req.originalUrl;
+    return res.render("login", {
+      settings,
+    });
+  }
 
-//   return next();
-// });
+  return next();
+});
 
 app.use((req, res, next) => {
   if (!req.url.includes(".js") && !req.url.includes(".css")) {
