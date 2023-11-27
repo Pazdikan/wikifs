@@ -97,6 +97,11 @@ function getBirthdays() {
   for (const key in entries) {
     if (Object.hasOwnProperty.call(entries, key)) {
       const entry = entries[key];
+
+      if (!entry.infobox.date_of_birth) {
+        return;
+      }
+
       const birthdayMoment = moment(entry.infobox.date_of_birth).year(
         isThisYear(entry.infobox.date_of_birth)
           ? moment().year()
