@@ -82,6 +82,11 @@ function getBirthdays() {
   const entries = loadEntries();
   const upcomingBirthdays = [];
 
+  const dateFormats = [
+    /\b\d{4}-\d{2}-\d{2}\b/g,
+    /\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s\d{1,2},\s\d{4}\b/g,
+  ];
+
   function isToday(date_of_birth) {
     const today = moment();
 
@@ -101,6 +106,15 @@ function getBirthdays() {
       if (!entry.infobox || !(entry.infobox && !entry.infobox.date_of_birth)) {
         continue;
       }
+
+      dateFormats.forEach((dateRegex) => {
+        entry.infobox.date_of_birth = entry.infobox.date_of_birth.replace(
+          dateRegex,
+          (match) => {
+            return moment(match).format("YYYY-MM-DD");
+          }
+        );
+      });
 
       const birthdayMoment = moment(entry.infobox.date_of_birth).year(
         isThisYear(entry.infobox.date_of_birth)
