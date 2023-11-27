@@ -103,7 +103,7 @@ function getBirthdays() {
     if (Object.hasOwnProperty.call(entries, key)) {
       const entry = entries[key];
 
-      if (!entry.infobox || !(entry.infobox && !entry.infobox.date_of_birth)) {
+      if (!(entry && entry.infobox && entry.infobox.date_of_birth)) {
         continue;
       }
 
