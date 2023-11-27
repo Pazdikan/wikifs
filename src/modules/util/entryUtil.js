@@ -99,7 +99,7 @@ function getBirthdays() {
       const entry = entries[key];
 
       if (!entry.infobox.date_of_birth) {
-        return;
+        continue;
       }
 
       const birthdayMoment = moment(entry.infobox.date_of_birth).year(
