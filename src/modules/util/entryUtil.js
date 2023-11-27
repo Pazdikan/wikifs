@@ -108,12 +108,10 @@ function getBirthdays() {
       }
 
       dateFormats.forEach((dateRegex) => {
-        entry.infobox.date_of_birth = entry.infobox.date_of_birth.replace(
-          dateRegex,
-          (match) => {
-            return moment(match).format("YYYY-MM-DD");
-          }
-        );
+        entry.infobox.date_of_birth.replace(dateRegex, (match) => {
+          return (entry.infobox.date_of_birth =
+            moment(match).format("YYYY-MM-DD"));
+        });
       });
 
       const birthdayMoment = moment(entry.infobox.date_of_birth).year(
