@@ -590,6 +590,11 @@ button {
   background-color: var(--background);
 }
 
+#heading-title {
+  max-height: fit-content;
+  text-align: center;
+}
+
 /* mobile */
 @media (max-width: 768px) {
   .home-panel {

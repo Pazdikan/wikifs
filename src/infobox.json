@@ -14,6 +14,41 @@
     "place_of_death": "Place of Death",
     "first_met": "First Met"
   },
+  "Physical": {
+    "height": "Height",
+    "weight": "Weight",
+    "eye_color": "Eye color",
+    "hair_type": "Hair type",
+    "hair_color": "Hair color",
+    "skin_color": "Skin color",
+    "body_type": "Body type"
+  },
+  "Work and Hobbies": {
+    "occupation": "Occupation",
+    "affiliation": "Affiliation",
+    "company": "Company",
+    "education": "Education",
+    "hobbies": "Hobbies",
+    "interests": "Interests"
+  },
+  "Family": {
+    "home": "Home",
+    "relationship": "Relationship",
+    "parents": "Parents",
+    "siblings": "Siblings",
+    "children": "Children"
+  },
+  "Building": {
+    "building_type": "Type",
+    "building_address": "Address",
+    "building_owner": "Owner",
+    "building_usage": "Usage",
+    "building_year_built": "Year uilt",
+    "building_condition": "Condition",
+    "building_size": "Size",
+    "building_floors": "No. of floors",
+    "building_inhabitants": "Inhabitants"
+  },
   "Equipment": {
     "vehicles": "Vehicles",
     "weapons": "Weapons",
@@ -42,30 +77,6 @@
     "vehicle_drivetrain": "Drivetrain",
     "vehicle_gearbox": "Gearbox",
     "drive": "Drive"
-  },
-  "Physical": {
-    "height": "Height",
-    "weight": "Weight",
-    "eye_color": "Eye color",
-    "hair_type": "Hair type",
-    "hair_color": "Hair color",
-    "skin_color": "Skin color",
-    "body_type": "Body type"
-  },
-  "Family": {
-    "home": "Home",
-    "relationship": "Relationship",
-    "parents": "Parents",
-    "siblings": "Siblings",
-    "children": "Children"
-  },
-  "Work and Hobbies": {
-    "occupation": "Occupation",
-    "affiliation": "Affiliation",
-    "company": "Company",
-    "education": "Education",
-    "hobbies": "Hobbies",
-    "interests": "Interests"
   },
   "Social": {
     "email": "Email",
